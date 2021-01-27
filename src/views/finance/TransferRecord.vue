@@ -40,19 +40,19 @@
             </div>
             <div class="search-content">
               <el-table
-                  :data="tableData">
+                  :data="recordData">
                 <el-table-column
                     prop="date"
                     label="日期"
                     width="180">
                 </el-table-column>
                 <el-table-column
-                    prop="name"
+                    prop="orderNo"
                     label="商户订单号"
                     width="180">
                 </el-table-column>
                 <el-table-column
-                    prop="address"
+                    prop="account"
                     label="支付宝账号">
                 </el-table-column>
                 <el-table-column
@@ -64,16 +64,16 @@
                     label="金额">
                 </el-table-column>
                 <el-table-column
-                    prop="address"
+                    prop="remark"
                     label="备注">
                 </el-table-column>
                 <el-table-column
-                    prop="address"
+                    prop="type"
                     label="转账类型">
                 </el-table-column>
                 <el-table-column
-                    prop="address"
-                    label="类型">
+                    prop="status"
+                    label="状态">
                 </el-table-column>
               </el-table>
             </div>
@@ -140,34 +140,21 @@ export default {
         zfbAccount: '',
         name: ''
       },
-      tableData: [{
-        date: '2016-05-02',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
-      }, {
-        date: '2016-05-04',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        date: '2016-05-01',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄',
-      }, {
-        date: '2016-05-03',
-        name: '王小虎',
-        address: '上海市普陀区金沙江路 1518 弄'
-      }]
+      recordData: []
     };
   },
   mounted() {
-    console.log(this.search);
+    this.axios.get('/finance/record').then((res) => {
+      this.recordData = res.data;
+    })
   },
   methods: {
+
     handleClick(tab, event) {
       console.log(tab, event);
     },
     doSearch() {
-      alert('搜索')
+      console.log(this.search);
     },
     doExport() {
       alert('导出')

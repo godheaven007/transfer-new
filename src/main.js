@@ -8,7 +8,7 @@ import plugin from "@/plugin";
 import 'element-ui/lib/theme-chalk/index.css'
 
 // mock开关
-const mock = false;
+const mock = true;
 if (mock) {
   require('@/mock/index');
 }

@@ -174,7 +174,11 @@ export default {
   mounted() {
     this.axios.get('/user/login').then((res) => {
       console.log(res,666);
-    })
+    });
+
+    this.axios.get('test').then((res) => {
+      console.log(res);
+    });
   }
 }
 </script>
