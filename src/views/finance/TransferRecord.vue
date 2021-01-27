@@ -78,9 +78,9 @@
               </el-table>
             </div>
           </el-tab-pane>
-          <el-tab-pane label="微信记录" name="wx">
-            敬请期待！
-          </el-tab-pane>
+<!--          <el-tab-pane label="微信记录" name="wx">-->
+<!--            敬请期待！-->
+<!--          </el-tab-pane>-->
         </el-tabs>
       </div>
       <div class="record-container">
