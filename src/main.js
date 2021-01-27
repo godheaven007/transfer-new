@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import axios from 'axios'
 import VueAxios from 'vue-axios' // 把axios挂载到vue实例
+import FileSaver from 'file-saver'
+import XLSX from 'xlsx'
 import App from './App.vue'
 import router from './router'
 import store from './store'
@@ -187,6 +189,9 @@ Vue.prototype.$prompt = MessageBox.prompt;
 Vue.prototype.$notify = Notification;
 Vue.prototype.$message = Message;
 
+// excel导出
+Vue.prototype.$FileSaver = FileSaver;
+Vue.prototype.$XLSX = XLSX;
 Vue.use(VueAxios, axios);
 Vue.use(plugin);
 Vue.config.productionTip = false
