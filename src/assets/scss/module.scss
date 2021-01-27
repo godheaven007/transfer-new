@@ -1,0 +1,56 @@
+@import "base";
+//登录注册模块
+.login-wrap {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background-color: $lightGreyBg;
+  .login-box {
+    position: absolute;
+    width: 500px;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 25px;
+    box-shadow: 2px 2px 20px 0px rgba(0,0,0,0.3);
+    border-radius: 8px;
+    .el-form-item{
+      margin-bottom: 22px;
+    }
+    .login-title {
+      font-size: 24px;
+      text-align: center;
+      margin-bottom: 28px;
+    }
+    .login-btn {
+      width: 100%;
+      background-color: $baseBg;
+    }
+    .login-extra{
+      display: flex;
+      justify-content: flex-start;
+      margin-top: 10px;
+      .reg, .forget {color: $baseColor}
+      .reg {
+        margin-left: auto;
+      }
+    }
+  }
+}
+
+
+// 首页-邀请返利
+.card-wrap{
+  background-color: $lightGreyBg;
+  .card-item {
+    .card-title {
+      font-size: $font20;
+      color: $lightGreyColor;
+      margin-bottom: 4px;
+    }
+    .card-num {
+      color: $baseColor;
+      font-size: $font24;
+    }
+  }
+}
