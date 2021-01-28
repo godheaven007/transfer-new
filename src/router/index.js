@@ -42,7 +42,7 @@ const routes = [
       },
       {
         path: 'transferByZFB/mode',
-        name: 'TransferByZFB',
+        name: 'ZfbMode',
         component: () => import('@/views/batch/ZfbMode')
       },
       {

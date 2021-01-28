@@ -1,4 +1,5 @@
 export default {
+    // 复制至粘贴板
     copyToClipboard(text) {
         var textArea = document.createElement('textarea');
         textArea.style.position = 'fixed';
@@ -24,6 +25,7 @@ export default {
 
         document.body.removeChild(textArea);
     },
+    // 获取当前日期
     getCurDate() {
         let date = new Date(),
             mm = date.getMonth() + 1,
@@ -33,5 +35,11 @@ export default {
             (mm > 9 ? '' : '0') + mm,
             (dd > 9 ? '' : '0') + dd
         ].join('-');
+    },
+    // 向左填充指定位数'0'
+    str_pad(str, len) {
+        str += '';
+        while (str.length < len) str = '0' + str;
+        return str;
     }
 }
