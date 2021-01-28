@@ -29,47 +29,47 @@ const routes = [
       },
       // 批量转账
       {
-        path: 'transferByWX',
+        path: '/transferByWX',
         name: 'TransferByWX',
         component: () => import('@/views/batch/TransferByWX'),
         meta: {title: "微信转账"}
       },
       {
-        path: 'transferByZFB',
+        path: '/transferByZFB',
         name: 'TransferByZFB',
         component: () => import('@/views/batch/TransferByZFB'),
         meta: {title: "支付宝转账"}
       },
       {
-        path: 'transferByZFB/mode',
+        path: '/transferByZFB/mode',
         name: 'ZfbMode',
         component: () => import('@/views/batch/ZfbMode')
       },
       {
-        path: 'transferByZFB/manual',
+        path: '/transferByZFB/manual',
         name: 'ZfbManual',
         meta: { title: "到岗候选人名单确认" },
         component: () => import('@/views/batch/ZfbManual')
       },
       {
-        path: 'transferByZFB/batch',
+        path: '/transferByZFB/batch',
         name: 'ZfbBatch',
         component: () => import('@/views/batch/ZfbBatch')
       },
       {
-        path: 'transferByZFB/submit',
+        path: '/transferByZFB/submit',
         name: 'ZfbSubmit',
         component: () => import('@/views/batch/ZfbSubmit')
       },
       // 财务管理
       {
-        path: 'record',
+        path: '/finance/record',
         name: 'TransferRecord',
         component: () => import('@/views/finance/TransferRecord'),
         meta: {title: "转账记录"}
       },
       {
-        path: 'order',
+        path: '/finance/order',
         name: 'TransferOrder',
         component: () => import('@/views/finance/TransferOrder'),
         meta: {title: "转账订单"}

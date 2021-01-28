@@ -21,8 +21,8 @@
         </el-submenu>
         <el-submenu index="finance">
           <template slot="title">财务管理</template>
-          <el-menu-item index="/record">转账记录</el-menu-item>
-          <el-menu-item index="/order">转账订单</el-menu-item>
+          <el-menu-item index="/finance/record">转账记录</el-menu-item>
+          <el-menu-item index="/finance/order">转账订单</el-menu-item>
         </el-submenu>
         <el-menu-item index="/setting">系统设置</el-menu-item>
         <el-menu-item index="/plugin">插件市场</el-menu-item>
