@@ -13,19 +13,19 @@
           active-text-color="#fff"
           router
           @select="handleSelect">
-        <el-menu-item index="index">个人中心</el-menu-item>
+        <el-menu-item index="/index">个人中心</el-menu-item>
         <el-submenu index="transfer">
           <template slot="title">批量转账</template>
-          <el-menu-item index="transferByWX">微信转账</el-menu-item>
-          <el-menu-item index="transferByZFB">支付宝转账</el-menu-item>
+          <el-menu-item index="/transferByWX">微信转账</el-menu-item>
+          <el-menu-item index="/transferByZFB">支付宝转账</el-menu-item>
         </el-submenu>
         <el-submenu index="finance">
           <template slot="title">财务管理</template>
-          <el-menu-item index="record">转账记录</el-menu-item>
-          <el-menu-item index="order">转账订单</el-menu-item>
+          <el-menu-item index="/record">转账记录</el-menu-item>
+          <el-menu-item index="/order">转账订单</el-menu-item>
         </el-submenu>
-        <el-menu-item index="setting">系统设置</el-menu-item>
-        <el-menu-item index="plugin">插件市场</el-menu-item>
+        <el-menu-item index="/setting">系统设置</el-menu-item>
+        <el-menu-item index="/plugin">插件市场</el-menu-item>
       </el-menu>
     </div>
     <div class="nav-extra">
@@ -52,7 +52,7 @@ export default {
   name: "Header",
   data() {
     return {
-      activeMenuIndex: 'index'
+      activeMenuIndex: '/index'
     };
   },
   methods: {
