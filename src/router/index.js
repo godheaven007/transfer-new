@@ -35,6 +35,27 @@ const routes = [
         name: 'TransferByZFB',
         component: () => import('@/views/batch/TransferByZFB')
       },
+      {
+        path: 'transferByZFB/mode',
+        name: 'TransferByZFB',
+        component: () => import('@/views/batch/ZfbMode')
+      },
+      {
+        path: 'transferByZFB/manual',
+        name: 'ZfbManual',
+        meta: { title: "到岗候选人名单确认" },
+        component: () => import('@/views/batch/ZfbManual')
+      },
+      {
+        path: 'transferByZFB/batch',
+        name: 'ZfbBatch',
+        component: () => import('@/views/batch/ZfbBatch')
+      },
+      {
+        path: 'transferByZFB/submit',
+        name: 'ZfbSubmit',
+        component: () => import('@/views/batch/ZfbSubmit')
+      },
       // 财务管理
       {
         path: 'record',

@@ -1,23 +1,23 @@
 <template>
   <div class="wrap">
-    <custom-step :currentStep="1"></custom-step>
+    <custom-step :currentStep="2"></custom-step>
     <ul class="box-wrap">
       <li class="box">
         <div class="item">
-          <div class="title">自有企业支付宝转账</div>
-          <p>使用自己的企业支付宝账户进行</p>
-          <p>付款无需在系统中充值无任何手续费，单</p>
-          <p>笔最低<em> 0.1 </em>元，每日限额<em> 100 </em>万元，没有笔数限制。</p>
-          <el-button size="medium" class="baseBtn">选择</el-button>
+          <div class="title">在线录入</div>
+          <p>直接输入多个收款账号</p>
+          <p>适用于转账笔数较少时使用</p>
+          <p>方便灵活，更加快捷。</p>
+          <el-button size="medium" class="baseBtn" @click="select(1)">选择</el-button>
         </div>
       </li>
       <li class="box">
         <div class="item">
-          <div class="title">易推客官方支付宝转账</div>
-          <p>借用易推客官方企业支付宝账户进行</p>
-          <p>转账，需提前充值到该账户，手续费 0%，单笔</p>
-          <p>最低<em> 1 </em>元，每日限额<em> 10 </em>万元。</p>
-          <el-button size="medium" class="baseBtn" @click="selectZbfMode">选择</el-button>
+          <div class="title">批量上传</div>
+          <p>一键上传Excel格式文件</p>
+          <p>适用于转账笔数较多时使用</p>
+          <p>一键批量转账，更加高效。</p>
+          <el-button size="medium" class="baseBtn" @click="select(2)">选择</el-button>
         </div>
       </li>
     </ul>
@@ -27,7 +27,7 @@
 <script>
 import CustomStep from "@/components/CustomStep";
 export default {
-  name: "TransferByZFB",
+  name: "ZfbMode",
   components: {
     CustomStep
   },
@@ -37,8 +37,12 @@ export default {
     }
   },
   methods: {
-    selectZbfMode() {
-      this.$router.push({path: 'transferByZFB/mode'});
+    select(type) {
+      if(type == 1) {
+        this.$router.push({path: '/transferByZFB/manual'});
+      } else if(type == 2) {
+        this.$router.push({path: '/transferByZFB/batch'});
+      }
     }
   }
 }

@@ -1,5 +1,6 @@
 // flex布局 $hov水平方向 $col垂直方向
 @mixin baseBtn() {
+  color: #fff;
   background-color: $baseBg;
   border-color: $baseBg;
 }
