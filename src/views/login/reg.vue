@@ -33,7 +33,7 @@
                 placeholder="短信验证码"
                 autocomplete="off"
             />
-            <mobile-code :click-able="mobileCodeIsClickAble"></mobile-code>
+            <mobile-code :phone="loginForm.phone"></mobile-code>
           </el-form-item>
         </div>
 

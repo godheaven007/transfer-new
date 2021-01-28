@@ -33,7 +33,7 @@
                 placeholder="短信验证码"
                 autocomplete="off"
             />
-            <div class="base-button success" @click="getCode"><span>获取验证码</span><span class="count"></span></div>
+            <mobile-code :phone="loginForm.phone"></mobile-code>
           </el-form-item>
         </div>
 
@@ -80,8 +80,10 @@
 </template>
 
 <script>
+import MobileCode from "@/components/MobileCode";
 export default {
   name: 'Forget',
+  components: {MobileCode},
   data() {
     return {
       loginForm: {
@@ -108,16 +110,6 @@ export default {
 
   },
   methods: {
-    getCode() {
-      var reg = /^1\d{10}$/;
-      if(!reg.test(this.phone)) {
-        this.$message({
-          message: '手机号格式不正确',
-          type: 'warning'
-        });
-        return false;
-      }
-    },
     validatePhone(rule, value, callback) {
       var reg = /^1\d{10}$/;
       if(!reg.test(value)) {

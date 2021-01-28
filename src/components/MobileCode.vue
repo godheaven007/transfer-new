@@ -11,20 +11,20 @@ export default {
   name: "MobileCode",
   data() {
     return {
-      totalTime: 3,
+      totalTime: 60,
       timer: null,
-      flag: true
+      clickAble: true
     }
   },
   props: {
-    clickAble: {
-      type: Boolean,
-      default: false
+    phone: {
+      type: String|Number,
+      default: ''
     }
   },
   methods: {
     getMobileCode() {
-      if(!this.clickAble) {
+      if(!/^1\d{10}$/.test(this.phone)) {
         this.$message({
           message: '手机号格式不正确',
           type: 'warning'
@@ -32,10 +32,10 @@ export default {
         return false;
       }
       // 重复点击
-      if(!this.flag) {
+      if(!this.clickAble) {
         return false;
       }
-      this.flag = false;
+      this.clickAble = false;
       this.timer = setInterval(() => {
         this.totalTime -= 1;
         this.$refs.code.innerText = Util.str_pad(this.totalTime, 2) + '秒后重发';
@@ -47,8 +47,8 @@ export default {
     reset() {
       clearInterval(this.timer);
       this.$refs.code.innerText = '重新获取';
-      this.flag = true;
-      this.totalTime = 5;
+      this.clickAble = true;
+      this.totalTime = 60;
     }
   },
   mounted() {
