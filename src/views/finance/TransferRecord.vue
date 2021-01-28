@@ -2,7 +2,7 @@
   <div class="record-wrap">
     <div class="record">
       <div class="record-nav">
-        <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tabs v-model="activeName">
           <el-tab-pane label="支付宝记录" name="zfb">
             <!--搜索-->
             <div class="search-wrap">
@@ -45,13 +45,11 @@
                   :data="recordData">
                 <el-table-column
                     prop="date"
-                    label="日期"
-                    width="180">
+                    label="日期">
                 </el-table-column>
                 <el-table-column
                     prop="orderNo"
-                    label="商户订单号"
-                    width="180">
+                    label="商户订单号">
                 </el-table-column>
                 <el-table-column
                     prop="account"
@@ -137,13 +135,11 @@
                   :data="recordData2">
                 <el-table-column
                     prop="date"
-                    label="日期"
-                    width="180">
+                    label="日期">
                 </el-table-column>
                 <el-table-column
                     prop="orderNo"
-                    label="商户订单号"
-                    width="180">
+                    label="商户订单号">
                 </el-table-column>
                 <el-table-column
                     prop="account"
@@ -295,9 +291,6 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
     },
-    handleClick(tab, event) {
-      console.log(tab, event);
-    },
     doSearch(type) {
       console.log(this.search);
     },
@@ -335,6 +328,7 @@ export default {
     }
   }
   .search-wrap {
+    padding-left: 50px;
     border-bottom: 1px solid #ebeef5;;
   }
   .record-nav /deep/ {

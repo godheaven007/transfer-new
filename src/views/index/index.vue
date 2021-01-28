@@ -172,13 +172,9 @@ export default {
     }
   },
   mounted() {
-    this.axios.get('/user/login').then((res) => {
-      console.log(res,666);
-    });
-
-    this.axios.get('test').then((res) => {
-      console.log(res);
-    });
+    // this.axios.get('/test/index/memberList?id=36be5581-5c82-11eb-b243-005056a9f41d').then((res) => {
+    //   console.log(res,666);
+    // });
   }
 }
 </script>

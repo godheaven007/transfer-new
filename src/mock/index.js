@@ -19,3 +19,19 @@ Mock.mock('/api/finance/record', () => {
     }
     return list;
 });
+
+Mock.mock('/api/finance/order', () => {
+    let list = [];
+    for(let i = 0; i < 10; i++) {
+        let o = {
+            prop1: Random.date('yyyy-MM-dd'),
+            prop2: Random.string('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', 27, 27),
+            prop3: Random.float(100, 10000, 2, 2),
+            prop4: Random.float(100, 10000, 2, 2),
+            prop5: Random.float(100, 10000, 2, 2),
+            prop6: '公用支付宝'
+        };
+        list.push(o);
+    }
+    return list;
+});

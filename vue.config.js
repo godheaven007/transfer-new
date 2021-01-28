@@ -9,6 +9,13 @@ module.exports = {
                 pathRewrite: {
                     '/api': ''
                 }
+            },
+            '/test': {
+                target: 'http://nianhui.spp.com',
+                changeOrigin:true,
+                pathRewrite: {
+                    '/test': ''
+                }
             }
         }
     },
