@@ -10,7 +10,7 @@ VueRouter.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
 };
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 
 const routes = [
   {
@@ -22,18 +22,23 @@ const routes = [
       {
         path: 'index',
         name: 'index',
-        component: () => import('@/views/index')
+        component: () => import('@/views/index'),
+        meta: {
+          title: "个人中心"
+        }
       },
       // 批量转账
       {
         path: 'transferByWX',
         name: 'TransferByWX',
-        component: () => import('@/views/batch/TransferByWX')
+        component: () => import('@/views/batch/TransferByWX'),
+        meta: {title: "微信转账"}
       },
       {
         path: 'transferByZFB',
         name: 'TransferByZFB',
-        component: () => import('@/views/batch/TransferByZFB')
+        component: () => import('@/views/batch/TransferByZFB'),
+        meta: {title: "支付宝转账"}
       },
       {
         path: 'transferByZFB/mode',
@@ -60,48 +65,56 @@ const routes = [
       {
         path: 'record',
         name: 'TransferRecord',
-        component: () => import('@/views/finance/TransferRecord')
+        component: () => import('@/views/finance/TransferRecord'),
+        meta: {title: "转账记录"}
       },
       {
         path: 'order',
         name: 'TransferOrder',
-        component: () => import('@/views/finance/TransferOrder')
+        component: () => import('@/views/finance/TransferOrder'),
+        meta: {title: "转账订单"}
       },
 
       // 系统设置
       {
         path: '/setting',
         name: 'Setting',
-        component: () => import('@/views/setting')
+        component: () => import('@/views/setting'),
+        meta: {title: "系统设置"}
       },
       // 插件市场
       {
         path: '/plugin',
         name: 'Plugin',
-        component: () => import('@/views/plugin')
+        component: () => import('@/views/plugin'),
+        meta: {title: "插件市场"}
       },
       // vip
       {
         path: '/vip',
         name: 'Vip',
-        component: () => import('@/views/vip')
+        component: () => import('@/views/vip'),
+        meta: {title: "会员购买"}
       },
     ]
   },
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/views/login')
+    component: () => import('@/views/login'),
+    meta: {title: "登录"}
   },
   {
     path: '/reg',
     name: 'Reg',
-    component: () => import('@/views/login/reg')
+    component: () => import('@/views/login/reg'),
+    meta: {title: "注册"}
   },
   {
     path: '/forget',
     name: 'Forget',
-    component: () => import('@/views/login/forget')
+    component: () => import('@/views/login/forget'),
+    meta: {title: "忘记密码"}
   },
   // 404路由
   {
