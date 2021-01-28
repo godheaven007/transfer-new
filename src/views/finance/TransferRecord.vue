@@ -76,6 +76,9 @@
                 <el-table-column
                     prop="status"
                     label="状态">
+                  <template slot-scope="scope">
+                    <el-tag type="danger">{{ scope.row.status }}</el-tag>
+                  </template>
                 </el-table-column>
               </el-table>
               <div class="block">
@@ -170,9 +173,6 @@
             </div>
           </el-tab-pane>
         </el-tabs>
-      </div>
-      <div class="record-container">
-
       </div>
     </div>
   </div>
