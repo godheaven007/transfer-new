@@ -81,16 +81,6 @@ export default {
       }
       callback();
     },
-    validateBeforeSubmit(cb) {
-      this.$refs.loginForm.validate((valid) => {
-        if (valid) {
-          cb();
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
-    },
     doLogin() {
       alert('登录')
     },

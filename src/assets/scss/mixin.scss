@@ -1,4 +1,12 @@
 // flex布局 $hov水平方向 $col垂直方向
+@mixin baseBtn() {
+  background-color: $baseBg;
+  border-color: $baseBg;
+}
+@mixin resetBtn() {
+  background-color: $resetBg;
+  border-color: $resetBg;
+}
 @mixin flex($hov:space-between,$col:center) {
   display: flex;
   justify-content: $hov;

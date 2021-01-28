@@ -62,7 +62,7 @@
             <el-input  placeholder="请输入订单号" v-model="search.prop3"></el-input>
           </el-form-item>
           <el-form-item class="ml20">
-            <el-button type="primary" class="ml20" @click="doSearch()">搜索</el-button>
+            <el-button type="primary" class="ml20 searchBtn" @click="doSearch()">搜索</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -191,6 +191,7 @@ export default {
 
 <style scoped lang="scss">
 @import "@/assets/scss/base.scss";
+@import "@/assets/scss/mixin.scss";
   .order-wrap {
     padding: 20px;
     .order-info {
@@ -225,10 +226,10 @@ export default {
           .deposit-btn {
             color: #fff;
             &.cash {
-              background-color: $baseBg;
+              @include baseBtn;
             }
             &.record {
-              background-color: rgb(247, 186, 42);
+              @include resetBtn;
               margin-top: 10px;
             }
           }
@@ -243,5 +244,8 @@ export default {
         padding-left: 50px;
       }
     }
+  }
+  .searchBtn{
+    @include baseBtn;
   }
 </style>

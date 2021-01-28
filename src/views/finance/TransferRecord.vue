@@ -33,8 +33,8 @@
                   <el-input  placeholder="请输入姓名" v-model="search.name"></el-input>
                 </el-form-item>
                 <el-form-item class="ml20">
-                  <el-button type="primary" class="ml20" @click="doSearch(1)">搜索</el-button>
-                  <el-button type="primary" class="ml20" @click="doExport(2)">导出</el-button>
+                  <el-button type="primary" class="ml20 searchBtn" @click="doSearch(1)">搜索</el-button>
+                  <el-button type="primary" class="ml20 exportBtn" @click="doExport(2)">导出</el-button>
                 </el-form-item>
               </el-form>
             </div>
@@ -124,8 +124,8 @@
                   <el-input  placeholder="请输入姓名" v-model="search2.name"></el-input>
                 </el-form-item>
                 <el-form-item class="ml20">
-                  <el-button type="primary" class="ml20" @click="doSearch(2)">搜索</el-button>
-                  <el-button type="primary" class="ml20" @click="doExport(2)">导出</el-button>
+                  <el-button type="primary" class="ml20 searchBtn" @click="doSearch(2)">搜索</el-button>
+                  <el-button type="primary" class="ml20 exportBtn" @click="doExport(2)">导出</el-button>
                 </el-form-item>
               </el-form>
             </div>
@@ -318,6 +318,7 @@ export default {
 
 <style scoped lang="scss">
 @import "@/assets/scss/base.scss";
+@import "@/assets/scss/mixin.scss";
   .record-wrap {
     padding: 20px;
     .record {
@@ -339,6 +340,10 @@ export default {
     .el-tabs__active-bar {
       background-color: $baseColor;
     }
+  }
+  .searchBtn,
+  .exportBtn{
+    @include baseBtn;
   }
 
 </style>
