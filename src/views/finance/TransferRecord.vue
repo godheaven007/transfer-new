@@ -41,6 +41,8 @@
             <!--数据-->
             <div class="search-content">
               <el-table
+                  :header-cell-style="{textAlign: 'center'}"
+                  :cell-style="{ textAlign: 'center' }"
                   id="out-table"
                   :data="recordData">
                 <el-table-column
@@ -132,6 +134,8 @@
             <!--数据-->
             <div class="search-content">
               <el-table
+                  :header-cell-style="{textAlign: 'center'}"
+                  :cell-style="{ textAlign: 'center' }"
                   :data="recordData2">
                 <el-table-column
                     prop="date"

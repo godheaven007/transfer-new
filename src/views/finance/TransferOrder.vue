@@ -69,6 +69,8 @@
       <div class="order-content">
         <el-table
             id="out-table"
+            :header-cell-style="{textAlign: 'center'}"
+            :cell-style="{ textAlign: 'center' }"
             :data="recordData">
           <el-table-column
               prop="prop1"
