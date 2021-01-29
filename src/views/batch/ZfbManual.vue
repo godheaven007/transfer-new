@@ -5,7 +5,7 @@
       <el-form :model="model" ref="ruleForm">
         <el-table
           :header-cell-style="{textAlign: 'center'}"
-          :cell-style="{ textAlign: 'center' }"
+          :cell-style="{ textAlign: 'center', paddingBottom: 0 }"
           stripe
           :data="model.list">
         <el-table-column
@@ -13,7 +13,7 @@
             label="支付宝账号">
           <template slot-scope="scope">
             <el-form-item :prop="'list.' + scope.$index + '.account'" :rules="rules.account">
-              <el-input v-model="scope.row.account" placeholder="请输入支付宝账号" size="medium"></el-input>
+              <el-input v-model="scope.row.account" placeholder="请输入支付宝账号" maxlength="11" size="medium"></el-input>
             </el-form-item>
           </template>
         </el-table-column>
@@ -89,12 +89,19 @@ export default {
         ],
         money: [
           { required: true, message: '转账金额必填', trigger: 'blur' },
+          { validator: this.validateMoney, trigger: 'blur' }
         ]
       }
     }
   },
   methods: {
-
+    validateMoney(rule, value, callback) {
+      var reg = /^([0-9](\.[0-9]{1,2}){0,1}|[1-9][0-9]{0,7}(\.[0-9]{1,2}){0,1})$/;
+      if(!reg.test(value)) {
+        callback('仅支持最大8位整数允许2位小数');
+      }
+      callback();
+    },
     doAdd() {
       this.model.list.push({
         account: '',
@@ -104,7 +111,18 @@ export default {
       })
     },
     doSubmit() {
-
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          localStorage.setItem('transfer_sure', JSON.stringify(this.model.list))
+          this.$router.push({path: '/transferByZFB/submit'});
+        } else {
+          this.$message({
+            message: '数据填写存在错误！',
+            type: 'warning'
+          });
+          return false;
+        }
+      });
     },
 
     handleDelete(index, row) {

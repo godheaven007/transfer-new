@@ -48,7 +48,7 @@ const routes = [
       {
         path: '/transferByZFB/manual',
         name: 'ZfbManual',
-        meta: { title: "到岗候选人名单确认" },
+        meta: { title: "在线录入" },
         component: () => import('@/views/batch/ZfbManual')
       },
       {
