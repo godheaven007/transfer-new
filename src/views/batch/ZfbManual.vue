@@ -113,7 +113,7 @@ export default {
     doSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          localStorage.setItem('transfer_sure', JSON.stringify(this.model.list))
+          localStorage.setItem('transfer_sure', JSON.stringify(this.model.list));
           this.$router.push({path: '/transferByZFB/submit'});
         } else {
           this.$message({

@@ -5,6 +5,7 @@
   border-color: $baseBg;
 }
 @mixin resetBtn() {
+  color: #fff;
   background-color: $resetBg;
   border-color: $resetBg;
 }

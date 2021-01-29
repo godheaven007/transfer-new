@@ -1,7 +1,7 @@
 export default {
     // 复制至粘贴板
     copyToClipboard(text) {
-        var textArea = document.createElement('textarea');
+        let textArea = document.createElement('textarea');
         textArea.style.position = 'fixed';
         textArea.style.zIndex = -1;
         textArea.style.top = '0';
@@ -44,7 +44,7 @@ export default {
     },
 
     accAdd(arg1, arg2) {
-        var r1, r2, m;
+        let r1, r2, m;
         try {
             r1 = arg1.toString().split(".")[1].length;
         } catch (e) {
@@ -57,13 +57,13 @@ export default {
         }
         m = Math.pow(10, Math.max(r1, r2));
 
-        var mul1 = accMul(arg1, m),
-            mul2 = accMul(arg2, m);
-        return accDiv(mul1 + mul2, m);
+        let mul1 = this.accMul(arg1, m),
+            mul2 = this.accMul(arg2, m);
+        return this.accDiv(mul1 + mul2, m);
         // return (arg1 * m + arg2 * m) / m;
     },
     accSub(arg1, arg2, fixed) {
-        var r1, r2, m, n;
+        let r1, r2, m, n;
         try {
             r1 = arg1.toString().split(".")[1].length;
         } catch (e) {
@@ -85,7 +85,7 @@ export default {
         return ((arg2 * m - arg1 * m) / m).toFixed(n);
     },
     accMul(arg1, arg2) {
-        var m = 0, s1 = arg1.toString(), s2 = arg2.toString();
+        let m = 0, s1 = arg1.toString(), s2 = arg2.toString();
         try {
             m += s1.split(".")[1].length
         } catch (e) {
@@ -97,7 +97,7 @@ export default {
         return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
     },
     accDiv(arg1, arg2) {
-        var t1 = 0, t2 = 0, r1, r2;
+        let t1 = 0, t2 = 0, r1, r2;
         try {
             t1 = arg1.toString().split(".")[1].length
         } catch (e) {
@@ -106,11 +106,10 @@ export default {
             t2 = arg2.toString().split(".")[1].length
         } catch (e) {
         }
-        with (Math) {
-            r1 = Number(arg1.toString().replace(".", ""));
-            r2 = Number(arg2.toString().replace(".", ""));
-            return (r1 / r2) * pow(10, t2 - t1);
-        }
+        r1 = Number(arg1.toString().replace(".", ""));
+        r2 = Number(arg2.toString().replace(".", ""));
+
+        return (r1 / r2) * Math.pow(10, t2 - t1);
     }
 
 }
