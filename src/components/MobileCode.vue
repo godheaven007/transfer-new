@@ -38,7 +38,13 @@ export default {
       this.clickAble = false;
       this.timer = setInterval(() => {
         this.totalTime -= 1;
-        this.$refs.code.innerText = Util.str_pad(this.totalTime, 2) + '秒后重发';
+
+        if(!this.$refs.code) {
+          // 防止倒计时，手动更换地址栏地址
+        } else {
+          this.$refs.code.innerText = Util.str_pad(this.totalTime, 2) + '秒后重发';
+        }
+
         if(this.totalTime === 0) {
           this.reset();
         }
