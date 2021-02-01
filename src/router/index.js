@@ -89,13 +89,19 @@ const routes = [
         component: () => import('@/views/plugin'),
         meta: {title: "插件市场"}
       },
+      {
+        path: '/plugininfo',
+        name: 'PluginInfo',
+        component: () => import('@/views/plugin/info'),
+        meta: {title: "插件市场"}
+      },
       // vip
       {
         path: '/vip',
         name: 'Vip',
         component: () => import('@/views/vip'),
         meta: {title: "会员购买"}
-      },
+      }
     ]
   },
   {
