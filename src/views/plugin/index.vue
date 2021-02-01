@@ -72,7 +72,7 @@
 
 <script>
 export default {
-  name: "index",
+  name: "PluginIndex",
   data() {
     return {
       activeName: 'all'
