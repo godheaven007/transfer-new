@@ -8,52 +8,18 @@
       <el-tabs v-model="activeName">
         <el-tab-pane label="全部插件" name="all">
           <div class="plugin-box-wrap">
-            <div class="plugin-box mr30">
+            <div class="plugin-box mr30" v-for="item of allList" :key="item.id">
               <div class="plugin-box-content">
-                <img src="/imgs/orderReturn.png" width="300" height="200" alt="订单返还插件">
+                <img :src="`/imgs/plugin${item.id}.png`" width="300" height="200" :alt="item.title">
                 <div class="plugin-content-hide">
-                  <div class="title">订单返款插件</div>
-                  <p>适用于订单返款需求用户</p>
-                  <p>支持创建订单手机表单</p>
-                  <p>支持支付宝、微信批量返款</p>
-                  <p>支持授权自动审核以及手动审核</p>
-                  <el-button class="buyBtn" size="medium">立即购买</el-button>
+                  <div class="title">{{ item.title }}</div>
+                  <p v-for="info of item.info">{{ info }}</p>
+                  <el-button class="buyBtn" size="medium" @click="buy(item.id)">立即购买</el-button>
                 </div>
               </div>
               <div class="pugin-info">
-                <p>订单返款插件</p>
-                <em>398元</em>
-              </div>
-            </div>
-            <div class="plugin-box mr30">
-              <div class="plugin-box-content">
-                <img src="/imgs/transferBlack.png" width="300" height="200" alt="转账黑名单功能">
-                <div class="plugin-content-hide">
-                  <div class="title">转账黑名单功能</div>
-                  <p>支持支付宝转账黑名单</p>
-                  <p>加入黑名单将无法转账</p>
-                  <el-button class="buyBtn" size="medium" @click="buy">立即购买</el-button>
-                </div>
-              </div>
-              <div class="pugin-info">
-                <p>转账黑名单功能</p>
-                <em>39.9元</em>
-              </div>
-            </div>
-            <div class="plugin-box">
-              <div class="plugin-box-content">
-                <img src="/imgs/message.png" width="300" height="200" alt="短信通知插件">
-                <div class="plugin-content-hide">
-                  <div class="title">短信通知插件</div>
-                  <p>自助购买短信0.05元/条</p>
-                  <p>如支付宝账号是手机号</p>
-                  <p>转账成功后自动发送短信</p>
-                  <el-button class="buyBtn" size="medium">立即购买</el-button>
-                </div>
-              </div>
-              <div class="pugin-info">
-                <p>短信通知插件</p>
-                <em>39.9元</em>
+                <p>{{ item.title }}</p>
+                <em>{{ item.price }}元</em>
               </div>
             </div>
           </div>
@@ -75,12 +41,37 @@ export default {
   name: "PluginIndex",
   data() {
     return {
-      activeName: 'all'
+      activeName: 'all',
+      allList: [
+          {
+            id: 1,
+            title: '订单返款插件',
+            info: ['适用于订单返款需求用户','支持创建订单手机表单', '支持支付宝、微信批量返款', '支持授权自动审核以及手动审核'],
+            price: 398
+          },
+          {
+            id: 2,
+            title: '转账黑名单功能',
+            info: ['支持支付宝转账黑名单','加入黑名单将无法转账'],
+            price: 39.9
+          },
+          {
+            id: 3,
+            title: '短信通知插件',
+            info: ['自助购买短信0.05元/条','如支付宝账号是手机号', '转账成功后自动发送短信'],
+            price: 39.9
+          }
+      ]
     }
   },
   methods: {
-    buy() {
-      alert('购买插件')
+    buy(type) {
+      this.$router.push({
+        path: '/plugininfo',
+        query: {
+          type: type
+        }
+      })
     }
   }
 }
