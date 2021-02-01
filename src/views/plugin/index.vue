@@ -28,7 +28,22 @@
           <p>已购买</p>
         </el-tab-pane>
         <el-tab-pane label="未购买" name="buying">
-          <p>未购买</p>
+          <div class="plugin-box-wrap">
+            <div class="plugin-box mr30" v-for="item of allList" :key="item.id">
+              <div class="plugin-box-content">
+                <img :src="`/imgs/plugin${item.id}.png`" width="300" height="200" :alt="item.title">
+                <div class="plugin-content-hide">
+                  <div class="title">{{ item.title }}</div>
+                  <p v-for="info of item.info">{{ info }}</p>
+                  <el-button class="buyBtn" size="medium" @click="buy(item.id)">立即购买</el-button>
+                </div>
+              </div>
+              <div class="pugin-info">
+                <p>{{ item.title }}</p>
+                <em>{{ item.price }}元</em>
+              </div>
+            </div>
+          </div>
         </el-tab-pane>
       </el-tabs>
     </div>

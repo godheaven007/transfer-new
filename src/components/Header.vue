@@ -64,16 +64,17 @@ export default {
       this.$router.push({path: 'vip'});
     },
     setCurrentRoute() {
-      this.activeIndex= this.$route.path; // 通过他就可以监听到当前路由状态并激活当前菜单
+      this.activeMenuIndex= 'this.$route.path'; // 通过他就可以监听到当前路由状态并激活当前菜单
     }
   },
   watch: {
     $route() {
-      this.setCurrentRoute();
+      // console.log('路由变化了', this.$route.path);
+      // this.setCurrentRoute();
     }
   },
   created() {
-    this.setCurrentRoute();
+    // this.setCurrentRoute();
   }
 }
 </script>
@@ -109,8 +110,9 @@ $fontSize: 16px;
   }
   .el-menu-item.is-active,
   .el-submenu.is-active .el-submenu__title{
-    background-color: #00786D!important;
-    border-bottom-color: #5fb878!important;
+    //background-color: #00786D!important;
+    //border-bottom-color: #5fb878!important;
+    border-bottom: 3px solid #5fb878!important;
   }
 }
 
