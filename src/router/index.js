@@ -92,8 +92,14 @@ const routes = [
       {
         path: '/plugininfo',
         name: 'PluginInfo',
-        component: () => import('@/views/plugin/info'),
+        component: () => import('@/views/plugin/PluginInfo'),
         meta: {title: "插件市场"}
+      },
+      {
+        path: '/black',
+        name: 'Black',
+        component: () => import('@/views/plugin/PluginBlack'),
+        meta: {title: "黑名单"}
       },
       // vip
       {

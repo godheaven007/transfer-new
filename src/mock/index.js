@@ -35,3 +35,19 @@ Mock.mock('/api/finance/order', () => {
     }
     return list;
 });
+
+
+Mock.mock('/api/black', () => {
+    let list = [];
+    for(let i = 0; i < 10; i++) {
+        let o = {
+            order: 1,
+            account: Random.email(),
+            name: Random.cname(),
+            addDate: Random.date('yyyy-MM-dd'),
+            updateDate: Random.date('yyyy-MM-dd')
+        };
+        list.push(o);
+    }
+    return list;
+});

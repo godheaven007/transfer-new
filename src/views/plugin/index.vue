@@ -25,7 +25,21 @@
           </div>
         </el-tab-pane>
         <el-tab-pane label="已购买" name="bought">
-          <p>已购买</p>
+          <div class="plugin-box-wrap">
+            <div class="plugin-box mr30" v-for="item of boughtList" :key="item.id">
+              <div class="plugin-box-content">
+                <img :src="`/imgs/plugin${item.id}.png`" width="300" height="200" :alt="item.title">
+                <div class="plugin-content-hide">
+                  <div class="title">{{ item.title }}</div>
+                  <p v-for="info of item.info">{{ info }}</p>
+                </div>
+              </div>
+              <div class="pugin-info">
+                <p>{{ item.title }}</p>
+                <el-button class="immediateUseBtn" size="small" @click="use(item.id)">立即使用</el-button>
+              </div>
+            </div>
+          </div>
         </el-tab-pane>
         <el-tab-pane label="未购买" name="buying">
           <div class="plugin-box-wrap">
@@ -76,6 +90,14 @@ export default {
             info: ['自助购买短信0.05元/条','如支付宝账号是手机号', '转账成功后自动发送短信'],
             price: 39.9
           }
+      ],
+      boughtList: [
+        {
+          id: 2,
+          title: '转账黑名单功能',
+          info: ['支持支付宝转账黑名单','加入黑名单将无法转账'],
+          price: 39.9
+        }
       ]
     }
   },
@@ -87,6 +109,11 @@ export default {
           type: type
         }
       })
+    },
+    use(type) {
+      if(type == 2) {
+        this.$router.push({path: '/black'});
+      }
     }
   }
 }
@@ -167,14 +194,18 @@ export default {
       margin-top: 10px;
       display: flex;
       font-size: 14px;
+      align-items: center;
       em {
         margin-left: auto;
         font-style: normal;
         color: rgb(255, 51, 0);
       }
+      .immediateUseBtn {
+        margin-left: auto;
+        @include baseBtn;
+      }
     }
   }
 }
-
 
 </style>
