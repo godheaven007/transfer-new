@@ -10,13 +10,13 @@ import plugin from "@/plugin";
 import 'element-ui/lib/theme-chalk/index.css'
 
 // mock开关
-const mock = true;
+const mock = false;
 if (mock) {
   require('@/mock/index');
 }
 
 // 根据前端的跨域方式做调整(本项目使用代理)
-axios.defaults.baseURL = '/api'; // 代理跨域,使用vue.config.js
+axios.defaults.baseURL = '/api/v1'; // 代理跨域,使用vue.config.js
 // axios.defaults.baseURL = env.baseURL; // CORS和JSONP跨域使用env.js
 axios.defaults.timeout = 8000; // 8秒
 

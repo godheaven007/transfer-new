@@ -6,9 +6,9 @@
     <div class="main">
       <router-view/>
     </div>
-    <div class="footer">
-      <Footer></Footer>
-    </div>
+<!--    <div class="footer">-->
+<!--      <Footer></Footer>-->
+<!--    </div>-->
   </div>
 </template>
 
@@ -38,7 +38,7 @@ export default {
     .main{
       overflow-y: scroll;
       width: 100%;
-      height: calc(100% - 180px);
+      height: calc(100% - 78px);
     }
     .footer{
       height: 100px;

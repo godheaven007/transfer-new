@@ -4,18 +4,11 @@ module.exports = {
     devServer: {
         proxy: {
             '/api': {
-                target: 'http://localhost:8080',
+                target: 'http://101.33.122.195',
                 changeOrigin:true,
-                pathRewrite: {
-                    '/api': ''
-                }
-            },
-            '/test': {
-                target: 'http://nianhui.spp.com',
-                changeOrigin:true,
-                pathRewrite: {
-                    '/test': ''
-                }
+                // pathRewrite: {
+                //     '/api': '/api'
+                // }
             }
         }
     },
