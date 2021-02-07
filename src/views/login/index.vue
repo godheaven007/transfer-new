@@ -6,13 +6,13 @@
                ref="loginForm"
                class="login-form"
                label-position="left">
-        <div class="login-title">量付通转账系统V4.0</div>
+        <div class="login-title">量付通转账系统</div>
         <!-- 手机号 -->
-        <el-form-item prop="phone">
+        <el-form-item prop="user_name">
           <el-input
               prefix-icon="el-icon-mobile-phone"
-              v-model="loginForm.phone"
-              name="username"
+              v-model="loginForm.user_name"
+              name="user_name"
               type="text"
               maxlength="11"
               placeholder="请输入手机号"
@@ -21,10 +21,10 @@
         </el-form-item>
 
         <!-- 输入密码 -->
-        <el-form-item prop="pwd">
+        <el-form-item prop="password">
           <el-input
               prefix-icon="el-icon-lock"
-              v-model="loginForm.pwd"
+              v-model="loginForm.password"
               name="password"
               type="password"
               maxlength="20"
@@ -50,21 +50,24 @@
 </template>
 
 <script>
+import api from "@/util/api";
+import {Message} from 'element-ui';
+
 export default {
   name: 'LoginIn',
   data() {
     return {
       loginForm: {
-        phone: '',
-        pwd: ''
+        user_name: '',
+        password: ''
       },
       loginRules: {
-        phone: [
-          { validator: this.validatePhone, trigger: 'blur' }
+        user_name: [
+          { validator: this.phoneValidate, trigger: 'blur' }
         ],
-        pwd: [
+        password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { max: 20, message: "密码长度不大于20个字符", trigger: "blur" }
+          { min:6, max: 50, message: "密码长度6~50个字符", trigger: "blur" }
         ]
       }
     }
@@ -74,7 +77,7 @@ export default {
 
   },
   methods: {
-    validatePhone(rule, value, callback) {
+    phoneValidate(rule, value, callback) {
       var reg = /^1\d{10}$/;
       if(!reg.test(value)) {
         callback('手机号格式不正确');
@@ -82,7 +85,17 @@ export default {
       callback();
     },
     doLogin() {
-      alert('登录')
+      api.login({
+        user_name: this.user_name,
+        password: this.password
+      }).then(res => {
+        Message.success(res.msg);
+        setTimeout(() => {
+          this.$router.push('/');
+        },1500);
+      }).catch(error => {
+        console.log(error);
+      })
     },
     handleLogin() {
       this.$refs.loginForm.validate((valid) => {
@@ -93,42 +106,6 @@ export default {
           return false;
         }
       });
-
-      // this.$axios({
-      //   method: 'post',
-      //   url: '/api/v1/login',
-      //   headers: {
-      //     'Content-Type': "application/json;charset=UTF-8"
-      //   },
-      //   data: {
-      //     name: this.loginForm.username,
-      //     password: this.loginForm.password
-      //   }
-      // })
-      //     .then(res=>{                    //请求成功后执行函数
-      //       if(res.data.message === 'SUCCESS'){
-      //         this.$router.push('/')	//登录验证成功路由实现跳转
-      //         this.$notify({
-      //           title: '提示',
-      //           message: '用户登录成功',
-      //           duration: 3000
-      //         });
-      //       }else{
-      //         this.$notify({
-      //           title: '提示',
-      //           message: '用户登录失败',
-      //           duration: 3000
-      //         });
-      //       }
-      //     })
-      //     .catch(err=>{                   //请求错误后执行函数
-      //       his.$notify({
-      //         title: '提示',
-      //         message: '用户访问错误',
-      //         duration: 3000
-      //       });
-      //       console.log(err)
-      //     })
     }
   }
 }

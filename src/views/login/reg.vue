@@ -126,7 +126,7 @@ export default {
       },
       regRules: {
         user_login: [
-          { validator: this.userLoginValidate, trigger: 'blur' }
+          { validator: this.phoneValidate, trigger: 'blur' }
         ],
         sms_code: [
           { validator: this.smsCodeValidate, trigger: 'blur' }
@@ -155,7 +155,7 @@ export default {
 
   },
   methods: {
-    userLoginValidate(rule, value, callback) {
+    phoneValidate(rule, value, callback) {
       var reg = /^1\d{10}$/;
       if(!reg.test(value)) {
         callback('手机号格式不正确');
