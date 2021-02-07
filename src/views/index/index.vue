@@ -172,13 +172,7 @@ export default {
     }
   },
   mounted() {
-    // this.axios.get('/test/index/memberList?id=36be5581-5c82-11eb-b243-005056a9f41d').then((res) => {
-    //   console.log(res,666);
-    // });
 
-    this.axios.get('/Support/sendSms?phone=18662161024').then(res=>{
-
-    })
   }
 }
 </script>
