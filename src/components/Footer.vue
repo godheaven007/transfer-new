@@ -1,6 +1,6 @@
 <template>
   <div class="copyright">
-    <a href="http://beian.miit.gov.cn/" target="_black">Copyright © 2019 易推客 | 备案皖ICP备17015836号-1</a>
+    <a href="http://beian.miit.gov.cn/" target="_black">Copyright © 2019 量付通 | 备案皖ICP备17015836号-1</a>
   </div>
 </template>
 

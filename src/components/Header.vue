@@ -1,7 +1,7 @@
 <template>
   <div class="nav-wrap">
     <div class="nav-logo">
-      易推客批量转账系统
+      量付通批量转账系统
     </div>
     <div class="nav-menu">
       <el-menu

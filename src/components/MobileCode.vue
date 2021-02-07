@@ -7,6 +7,9 @@
 
 <script>
 import Util from '@/util';
+import api from "@/util/api";
+import {Message} from "element-ui";
+
 export default {
   name: "MobileCode",
   data() {
@@ -23,12 +26,18 @@ export default {
     }
   },
   methods: {
+    sendCode() {
+      api.getSMSCode({
+        phone: this.phone
+      }).then(res => {
+        Message.success(res.msg);
+      }).catch(error => {
+        console.log(error);
+      })
+    },
     getMobileCode() {
       if(!/^1\d{10}$/.test(this.phone)) {
-        this.$message({
-          message: '手机号格式不正确',
-          type: 'warning'
-        });
+        Message.warning('手机号格式不正确');
         return false;
       }
       // 重复点击
@@ -40,7 +49,7 @@ export default {
         this.totalTime -= 1;
 
         if(!this.$refs.code) {
-          // 防止倒计时，手动更换地址栏地址
+          // 防止复制地址到地址栏报错
         } else {
           this.$refs.code.innerText = Util.str_pad(this.totalTime, 2) + '秒后重发';
         }
@@ -49,6 +58,8 @@ export default {
           this.reset();
         }
       }, 1000);
+
+      this.sendCode();
     },
     reset() {
       clearInterval(this.timer);

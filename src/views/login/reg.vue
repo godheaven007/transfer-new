@@ -1,9 +1,9 @@
 <template>
   <div class="login-wrap">
     <div class="login-box">
-      <el-form :model="loginForm"
-               :rules="loginRules"
-               ref="loginForm"
+      <el-form :model="regForm"
+               :rules="regRules"
+               ref="regForm"
                class="login-form"
                label-position="left">
         <div class="login-title">量付通转账系统</div>
@@ -12,7 +12,7 @@
         <el-form-item prop="user_login">
           <el-input
               prefix-icon="el-icon-mobile-phone"
-              v-model="loginForm.user_login"
+              v-model="regForm.user_login"
               name="user_login"
               type="text"
               maxlength="11"
@@ -26,22 +26,22 @@
           <el-form-item prop="sms_code">
             <el-input
                 prefix-icon="el-icon-message"
-                v-model="loginForm.sms_code"
+                v-model="regForm.sms_code"
                 name="sms_code"
                 type="text"
                 maxlength="6"
                 placeholder="短信验证码"
                 autocomplete="off"
             />
-            <mobile-code :phone="loginForm.user_login"></mobile-code>
+            <mobile-code :phone="regForm.user_login"></mobile-code>
           </el-form-item>
         </div>
 
         <!-- qq -->
         <el-form-item prop="qq_number">
           <el-input
-              prefix-icon="el-icon-mobile-phone"
-              v-model="loginForm.qq_number"
+              prefix-icon="el-icon-user"
+              v-model="regForm.qq_number"
               name="qq_number"
               type="text"
               maxlength="12"
@@ -54,7 +54,7 @@
         <el-form-item prop="password">
           <el-input
               prefix-icon="el-icon-lock"
-              v-model="loginForm.password"
+              v-model="regForm.password"
               name="password"
               type="password"
               maxlength="50"
@@ -68,7 +68,7 @@
         <el-form-item prop="password_again">
           <el-input
               prefix-icon="el-icon-lock"
-              v-model="loginForm.password_again"
+              v-model="regForm.password_again"
               name="password_again"
               type="password"
               maxlength="50"
@@ -81,8 +81,8 @@
         <!-- 邀请ID -->
         <el-form-item prop="invitation_code">
           <el-input
-              prefix-icon="el-icon-user"
-              v-model="loginForm.invitation_code"
+              prefix-icon="el-icon-collection-tag"
+              v-model="regForm.invitation_code"
               name="invitation_code"
               maxlength="8"
               type="text"
@@ -107,13 +107,16 @@
 
 <script>
 import MobileCode from "@/components/MobileCode";
+import api from "@/util/api";
+import {Message} from 'element-ui';
+
 export default {
   name: 'Reg',
   components: {MobileCode},
   data() {
     return {
       mobileCodeIsClickAble: true,
-      loginForm: {
+      regForm: {
         user_login: '',
         password: '',
         sms_code: '',
@@ -121,7 +124,7 @@ export default {
         password_again: '',
         invitation_code: ''
       },
-      loginRules: {
+      regRules: {
         user_login: [
           { validator: this.userLoginValidate, trigger: 'blur' }
         ],
@@ -174,32 +177,30 @@ export default {
       callback();
     },
     passwordAgainValidate(rule, value, callback) {
-      if(this.loginForm.password !== value) {
+      if(this.regForm.password !== value) {
         callback('密码与确认密码不一致');
       }
       callback();
     },
-    validateBeforeSubmit(cb) {
-      this.$refs.loginForm.validate((valid) => {
-        if (valid) {
-          cb();
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
-    },
-    doLogin() {
-      alert('登录');
+    doReg() {
+      api.register({
+        user_login: this.regForm.user_login,
+        sms_code: this.regForm.sms_code,
+        qq_number: this.regForm.qq_number,
+        password: this.regForm.password,
+        password_again: this.regForm.password_again,
+        invitation_code: this.regForm.invitation_code // 7M2DFJL6 测试用
+      }).then( res => {
+        Message.success(res.msg);
+        this.$router.push('/login');
+      }).catch(error => {
 
-      // this.axios.get('/Support/sendSms?phone=18662161024').then(res=>{
-      //
-      // })
+      })
     },
     handleReg() {
-      this.$refs.loginForm.validate((valid) => {
+      this.$refs.regForm.validate((valid) => {
         if (valid) {
-          this.doLogin();
+          this.doReg();
         } else {
           console.log('error submit!!');
           return false;
