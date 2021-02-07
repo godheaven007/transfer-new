@@ -4,7 +4,7 @@
       <div class="vip-title">黄金会员</div>
       <div class="vip-info">
         <p><i class="el-icon-success mr5" style="color: #666;"></i>支持自有 <span class="strong">企业支付宝</span> 批量转账</p>
-        <p><i class="el-icon-success mr5" style="color: #666;"></i>使用易推客官方支付宝转账 <span class="strong">费率0.30%</span></p>
+        <p><i class="el-icon-success mr5" style="color: #666;"></i>使用量付通官方支付宝转账 <span class="strong">费率0.30%</span></p>
       </div>
       <div class="vip-price">￥1999.00 / 年</div>
       <div class="establish">立即开通</div>

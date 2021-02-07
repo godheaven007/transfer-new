@@ -144,16 +144,16 @@ export default {
   name: "index",
   data() {
     return {
-      inviteUrl: '易推客全自动支付宝批量转账系统，无需手续费，秒到账，安全高效，真正解放您的双手http://t.cn/Ai8rdOcx',
+      inviteUrl: '量付通全自动支付宝批量转账系统，无需手续费，秒到账，安全高效，真正解放您的双手http://t.cn/Ai8rdOcx',
       videoList: [
         {
           id: 1000,
-          title: '易推客官方支付宝-在线录入转账教程',
+          title: '量付通官方支付宝-在线录入转账教程',
           url: '/video/manual.mp4'
         },
         {
           id: 1001,
-          title: '易推客官方支付宝-批量上传转账教程',
+          title: '量付通官方支付宝-批量上传转账教程',
           url: '/video/batch.mp4'
         }
       ]

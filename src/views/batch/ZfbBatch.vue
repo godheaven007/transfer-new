@@ -13,8 +13,8 @@
         <div class="el-upload__tip" slot="tip">
           <div class="info-wrap">
             <ul class="info">
-              <li>1.请务必按照模板格式填写上传，<a class="strong" href="/excel/易推客批量转账模板 .xlsx" target="_blank">下载模板</a></li>
-              <li>2.使用易推客官方支付宝转账单笔转账最低 <span class="strong">1元</span></li>
+              <li>1.请务必按照模板格式填写上传，<a class="strong" href="/excel/量付通批量转账模板 .xlsx" target="_blank">下载模板</a></li>
+              <li>2.使用量付通官方支付宝转账单笔转账最低 <span class="strong">1元</span></li>
               <li>3.每次最多上传 <span class="strong">2000</span> 笔转账</li>
             </ul>
           </div>

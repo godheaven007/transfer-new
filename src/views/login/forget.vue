@@ -6,7 +6,7 @@
                ref="loginForm"
                class="login-form"
                label-position="left">
-        <div class="login-title">易推客转账系统V4.0</div>
+        <div class="login-title">量付通转账系统V4.0</div>
 
         <!-- 手机号 -->
         <el-form-item prop="phone">
