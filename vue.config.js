@@ -1,6 +1,12 @@
 const path = require('path');
 
 module.exports = {
+    pages: {
+        index: {
+            entry: 'src/main.js',
+            title: '量付通'
+        }
+    },
     devServer: {
         proxy: {
             '/api': {
