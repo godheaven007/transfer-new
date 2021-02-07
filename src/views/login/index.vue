@@ -89,10 +89,13 @@ export default {
         user_name: this.user_name,
         password: this.password
       }).then(res => {
-        Message.success(res.msg);
+        Message.success({
+          duration: 2000,
+          message: res.msg
+        });
         setTimeout(() => {
           this.$router.push('/');
-        },1500);
+        },2000);
       }).catch(error => {
         console.log(error);
       })

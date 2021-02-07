@@ -6,14 +6,14 @@
                ref="loginForm"
                class="login-form"
                label-position="left">
-        <div class="login-title">量付通转账系统V4.0</div>
+        <div class="login-title">量付通转账系统</div>
 
         <!-- 手机号 -->
-        <el-form-item prop="phone">
+        <el-form-item prop="user_login">
           <el-input
               prefix-icon="el-icon-mobile-phone"
-              v-model="loginForm.phone"
-              name="username"
+              v-model="loginForm.user_login"
+              name="user_login"
               type="text"
               maxlength="11"
               placeholder="请输入注册时的手机号"
@@ -23,28 +23,28 @@
 
         <!-- 短信验证码 -->
         <div class="code-wrap">
-          <el-form-item prop="code">
+          <el-form-item prop="sms_code">
             <el-input
                 prefix-icon="el-icon-message"
-                v-model="loginForm.code"
-                name="code"
+                v-model="loginForm.sms_code"
+                name="sms_code"
                 type="text"
-                maxlength="10"
+                maxlength="6"
                 placeholder="短信验证码"
                 autocomplete="off"
             />
-            <mobile-code :phone="loginForm.phone"></mobile-code>
+            <mobile-code :phone="loginForm.user_login"></mobile-code>
           </el-form-item>
         </div>
 
         <!-- 密码 -->
-        <el-form-item prop="pwd">
+        <el-form-item prop="password">
           <el-input
               prefix-icon="el-icon-lock"
-              v-model="loginForm.pwd"
+              v-model="loginForm.password"
               name="password"
               type="password"
-              maxlength="20"
+              maxlength="50"
               placeholder="密码"
               show-password
               autocomplete="off"
@@ -52,13 +52,13 @@
         </el-form-item>
 
         <!-- 确认密码 -->
-        <el-form-item prop="confirmPwd">
+        <el-form-item prop="password_again">
           <el-input
               prefix-icon="el-icon-lock"
-              v-model="loginForm.confirmPwd"
-              name="password2"
+              v-model="loginForm.password_again"
+              name="password_again"
               type="password"
-              maxlength="20"
+              maxlength="50"
               placeholder="确认密码"
               show-password
               autocomplete="off"
@@ -67,7 +67,7 @@
 
         <!-- 找回密码 -->
         <div>
-          <el-button class="login-btn" type="primary" @click.native.prevent="handleReg">找回密码</el-button>
+          <el-button class="login-btn" type="primary" @click.native.prevent="handleForget">重置密码</el-button>
         </div>
 
         <!-- 其他 -->
@@ -81,26 +81,35 @@
 
 <script>
 import MobileCode from "@/components/MobileCode";
+import api from "@/util/api";
+import {Message} from 'element-ui';
+
 export default {
   name: 'Forget',
   components: {MobileCode},
   data() {
     return {
       loginForm: {
-        phone: '',
-        pwd: '',
-        code: '',
-        qq: '',
-        confirmPwd: '',
-        investId: ''
+        user_login: '',
+        sms_code: '',
+        password: '',
+        password_again: ''
       },
       loginRules: {
-        phone: [
-          { validator: this.validatePhone, trigger: 'blur' }
+        user_login: [
+          { validator: this.phoneValidate, trigger: 'blur' }
         ],
-        pwd: [
+        sms_code: [
+          { validator: this.smsCodeValidate, trigger: 'blur' }
+        ],
+        password: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-          { max: 20, message: "密码长度不大于20个字符", trigger: "blur" }
+          { min:6, max: 50, message: "密码长度6~50个字符", trigger: "blur" }
+        ],
+        password_again: [
+          { required: true, message: '请输入确认密码', trigger: 'blur' },
+          { min:6, max: 50, message: "确认密码长度6~50个字符", trigger: "blur" },
+          { validator: this.passwordAgainValidate, trigger: 'blur'}
         ]
       }
     }
@@ -110,27 +119,47 @@ export default {
 
   },
   methods: {
-    validatePhone(rule, value, callback) {
+
+    phoneValidate(rule, value, callback) {
       var reg = /^1\d{10}$/;
       if(!reg.test(value)) {
         callback('手机号格式不正确');
       }
       callback();
     },
-    validateBeforeSubmit(cb) {
-      this.$refs.loginForm.validate((valid) => {
-        if (valid) {
-          cb();
-        } else {
-          console.log('error submit!!');
-          return false;
-        }
-      });
+    smsCodeValidate(rule, value, callback) {
+      var reg = /^\d{6}$/;
+      if(!reg.test(value)) {
+        callback('短信验证码格式不正确（6位纯数字）');
+      }
+      callback();
     },
+    passwordAgainValidate(rule, value, callback) {
+      if(this.loginForm.password !== value) {
+        callback('密码与确认密码不一致');
+      }
+      callback();
+    },
+
     doForget() {
-      alert('登录')
+      api.resetPwd({
+        user_login: this.loginForm.user_login,
+        sms_code: this.loginForm.sms_code,
+        password: this.loginForm.password,
+        password_again: this.loginForm.password_again
+      }).then( res => {
+        Message.success({
+          duration: 2000,
+          message: res.msg
+        });
+        setTimeout(() => {
+          this.$router.push('/login');
+        },2000);
+      }).catch(error => {
+
+      })
     },
-    handleReg() {
+    handleForget() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
           this.doForget();

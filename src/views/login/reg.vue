@@ -191,8 +191,13 @@ export default {
         password_again: this.regForm.password_again,
         invitation_code: this.regForm.invitation_code // 7M2DFJL6 测试用
       }).then( res => {
-        Message.success(res.msg);
-        this.$router.push('/login');
+        Message.success({
+          duration: 2000,
+          message: res.msg
+        });
+        setTimeout(() => {
+          this.$router.push('/login');
+        },2000);
       }).catch(error => {
 
       })
