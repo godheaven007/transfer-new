@@ -2,6 +2,12 @@ import http from './http';
 
 export default{
     /**
+     * 首页模块
+     */
+    getNotice(param) {
+        return http.get(`/home/notice`, param);
+    },
+    /**
      * User : 用户模块
      */
     register(param) {

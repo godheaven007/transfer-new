@@ -1,5 +1,18 @@
 import axios from 'axios';
 import { Message} from 'element-ui';
+import router from "@/router";
+
+const handleResponse = (res) => {
+    if(res.code === 0) {
+        Message.warning(res.msg);
+        return Promise.reject(res);
+    } else if(res.code === 1){
+        return Promise.resolve(res);
+    } else if(res.code === 401){
+        router.push('/login');
+        Message.warning(res.msg);
+    }
+}
 
 const service = axios.create({});
 
@@ -25,13 +38,7 @@ service.interceptors.response.use(response => {
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
     // 否则的话抛出错误
     if (response.status === 200) {
-        console.log(response);
-        if(response.data.code === 0) {
-            Message.warning(response.data.msg);
-            return Promise.reject(response.data);
-        } else {
-            return Promise.resolve(response.data);
-        }
+        handleResponse(response.data);
     } else {
         return Promise.reject(response);
     }
