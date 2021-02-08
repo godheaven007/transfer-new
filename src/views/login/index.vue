@@ -86,8 +86,8 @@ export default {
     },
     doLogin() {
       api.login({
-        user_name: this.user_name,
-        password: this.password
+        user_name: this.loginForm.user_name,
+        password: this.loginForm.password
       }).then(res => {
         Message.success({
           duration: 2000,
@@ -96,6 +96,7 @@ export default {
         setTimeout(() => {
           this.$router.push('/');
         },2000);
+        localStorage.setItem('token', res.data.token);
       }).catch(error => {
         console.log(error);
       })

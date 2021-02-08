@@ -140,6 +140,9 @@
 
 <script>
 import Util from '@/util';
+import api from "@/util/api";
+import {Message} from 'element-ui';
+
 export default {
   name: "index",
   data() {
@@ -169,10 +172,13 @@ export default {
         message: '复制成功',
         type: 'success'
       });
+    },
+    getNotice() {
+      api.getNotice();
     }
   },
   mounted() {
-
+    this.getNotice();
   }
 }
 </script>
