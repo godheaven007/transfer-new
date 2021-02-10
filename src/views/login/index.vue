@@ -50,8 +50,9 @@
 </template>
 
 <script>
+import Storage from '@/util/storage';
 import api from "@/util/api";
-import {Message} from 'element-ui';
+import {Message} from "element-ui";
 
 export default {
   name: 'LoginIn',
@@ -74,7 +75,10 @@ export default {
   },
 
   mounted() {
-
+    console.log('login mounted');
+  },
+  created() {
+    console.log('login Created');
   },
   methods: {
     phoneValidate(rule, value, callback) {
@@ -93,10 +97,10 @@ export default {
           duration: 2000,
           message: res.msg
         });
+        Storage.setItem('token', res.data.token);
         setTimeout(() => {
           this.$router.push('/');
         },2000);
-        localStorage.setItem('token', res.data.token);
       }).catch(error => {
         console.log(error);
       })

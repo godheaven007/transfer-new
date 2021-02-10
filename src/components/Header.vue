@@ -32,7 +32,7 @@
       <div class="user">
         <el-dropdown trigger="click">
               <span class="el-dropdown-link">
-                18551050496(普通会员)
+                {{ user_login }}({{ level_text }})
                 <i class="el-icon-arrow-down el-icon--right"></i>
               </span>
           <el-dropdown-menu slot="dropdown">
@@ -48,11 +48,15 @@
 </template>
 
 <script>
+import Storage from '@/util/storage';
+import {Message} from 'element-ui'
 export default {
   name: "Header",
   data() {
     return {
-      activeMenuIndex: 'index'
+      activeMenuIndex: 'index',
+      level_text: '',
+      user_login: ''
     };
   },
   methods: {
@@ -75,6 +79,18 @@ export default {
   },
   created() {
     // this.setCurrentRoute();
+  },
+  mounted() {
+    this.axios.get('/home/personalInfo', {
+      headers: {'Authorization':  Storage.getItem('token')}
+    }).then( res => {
+      if(res.data.code == 1) {
+        this.level_text = res.data.data.level_text;
+        this.user_login = res.data.data.user_login;
+      } else {
+        Message.warning(res.data.msg);
+      }
+    })
   }
 }
 </script>

@@ -4,7 +4,7 @@
       <el-col :span="16">
         <div class="home-left">
           <!--邀请返利-->
-          <el-card>
+          <el-card v-if="false">
             <div slot="header" class="clearfix">
               <span>邀请返利</span>
             </div>
@@ -102,19 +102,19 @@
               <tbody>
                 <tr>
                   <td>会员账号</td>
-                  <td>18551050496</td>
+                  <td>{{ person.user_login }}</td>
                 </tr>
                 <tr>
                   <td>绑定QQ</td>
-                  <td>0</td>
+                  <td>{{ person.bind_qq }}</td>
                 </tr>
                 <tr>
                   <td>会员级别</td>
-                  <td>普通会员</td>
+                  <td>{{ person.level_text }}</td>
                 </tr>
                 <tr>
                   <td>到期时间</td>
-                  <td>2020-04-26 15:26:05</td>
+                  <td>{{ person.member_expire_time }}</td>
                 </tr>
               </tbody>
             </table>
@@ -141,7 +141,6 @@
 <script>
 import Util from '@/util';
 import api from "@/util/api";
-import {Message} from 'element-ui';
 
 export default {
   name: "index",
@@ -159,7 +158,8 @@ export default {
           title: '量付通官方支付宝-批量上传转账教程',
           url: '/video/batch.mp4'
         }
-      ]
+      ],
+      person: {}
     }
   },
   methods: {
@@ -175,10 +175,21 @@ export default {
     },
     getNotice() {
       api.getNotice();
+    },
+    getPersonalInfo() {
+      api.getPersonalInfo().then(res => {
+        let data = res.data;
+        this.person.bind_qq = data.bind_qq;
+        this.person.level = data.level;
+        this.person.level_text = data.level_text;
+        this.person.user_login = data.user_login;
+        this.person.member_expire_time = data.member_expire_time;
+      })
     }
   },
   mounted() {
     this.getNotice();
+    this.getPersonalInfo();
   }
 }
 </script>
