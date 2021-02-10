@@ -1,16 +1,24 @@
 import axios from 'axios';
 import { Message} from 'element-ui';
 import router from "@/router";
+import Storage from '@/util/storage';
 
 const handleResponse = (res) => {
     if(res.code === 0) {
-        Message.warning(res.msg);
+        Message.warning({
+            duration: 2000,
+            message: res.msg
+        });
         return Promise.reject(res);
     } else if(res.code === 1){
         return Promise.resolve(res);
     } else if(res.code === 401){
         router.push('/login');
-        Message.warning(res.msg);
+        Message.warning({
+            duration: 2000,
+            message: res.msg
+        });
+        return Promise.reject(res);
     }
 }
 
@@ -22,12 +30,10 @@ service.interceptors.request.use(config => {
     config.headers = {
         'Content-Type':'application/x-www-form-urlencoded' //配置请求头
     }
-    //注意使用token的时候需要引入cookie方法或者用本地localStorage等方法，推荐js-cookie
-    // const token = getCookie('名称');//这里取token之前，你肯定需要先拿到token,存一下
-    // if(token){
-    //     config.params = {'token':token} //如果要求携带在参数中
-    //     config.headers.token= token; //如果要求携带在请求头中
-    // }
+    const token = Storage.getItem('token');
+    if(token) {
+        config.headers.Authorization = token;
+    }
     return config;
 }, error => {
     return Promise.reject(error);
@@ -37,8 +43,9 @@ service.interceptors.response.use(response => {
     //接收到响应数据并成功后的一些共有的处理，关闭loading等
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
     // 否则的话抛出错误
+    console.log(response);
     if (response.status === 200) {
-        handleResponse(response.data);
+        return handleResponse(response.data);
     } else {
         return Promise.reject(response);
     }

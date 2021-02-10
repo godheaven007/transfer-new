@@ -1,4 +1,4 @@
-import http from './http';
+import http from '@/util/http';
 
 export default{
     /**
@@ -6,6 +6,9 @@ export default{
      */
     getNotice(param) {
         return http.get(`/home/notice`, param);
+    },
+    getPersonalInfo(param) {
+        return http.get(`/home/personalInfo`, param);
     },
     /**
      * User : 用户模块
