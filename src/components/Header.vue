@@ -30,7 +30,7 @@
     </div>
     <div class="nav-extra">
       <div class="user">
-        <el-dropdown trigger="click">
+        <el-dropdown trigger="click" @command="doLogout">
               <span class="el-dropdown-link">
                 {{ user_login }}({{ level_text }})
                 <i class="el-icon-arrow-down el-icon--right"></i>
@@ -69,6 +69,11 @@ export default {
     },
     setCurrentRoute() {
       this.activeMenuIndex= 'this.$route.path'; // 通过他就可以监听到当前路由状态并激活当前菜单
+    },
+    doLogout() {
+      Storage.clear('sureList');
+      localStorage.removeItem('token');
+      this.$router.push({path: '/login'});
     }
   },
   watch: {
