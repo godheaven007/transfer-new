@@ -41,15 +41,16 @@
         <el-form :inline="true">
           <el-form-item label="日期范围">
             <el-date-picker
-                v-model="search.time"
-                type="datetimerange"
+                v-model="search.dateRange"
+                type="daterange"
                 range-separator="-"
+                value-format="yyyy-MM-dd"
                 start-placeholder="开始时间"
                 end-placeholder="结束时间">
             </el-date-picker>
           </el-form-item>
           <el-form-item label="订单状态" class="ml10">
-            <el-select v-model="search.status" placeholder="请选择">
+            <el-select v-model="search.status_text" placeholder="请选择" @change="doStatusChange">
               <el-option
                   v-for="item in search.statusList"
                   :key="item.value"
@@ -59,7 +60,7 @@
             </el-select>
           </el-form-item>
           <el-form-item label="订单号" class="ml10">
-            <el-input  placeholder="请输入订单号" v-model="search.prop3"></el-input>
+            <el-input  placeholder="请输入订单号" v-model="search.order_number"></el-input>
           </el-form-item>
           <el-form-item class="ml20">
             <el-button type="primary" class="ml20 searchBtn" @click="doSearch()">搜索</el-button>
@@ -73,15 +74,15 @@
             :cell-style="{ textAlign: 'center' }"
             :data="recordData">
           <el-table-column
-              prop="prop1"
+              prop="create_time"
               label="转账时间">
           </el-table-column>
           <el-table-column
-              prop="prop2"
+              prop="order_number"
               label="订单编号">
           </el-table-column>
           <el-table-column
-              prop="prop3"
+              prop="amount"
               label="转账金额">
           </el-table-column>
           <el-table-column
@@ -93,20 +94,32 @@
               label="充值金额">
           </el-table-column>
           <el-table-column
-              prop="prop6"
               label="付款类型">
+            <template slot-scope="scope">
+              <span v-if="scope.row.type == 1">支付宝</span>
+              <span v-else>微信</span>
+            </template>
           </el-table-column>
           <el-table-column
               label="状态">
-            <el-tag>订单取消</el-tag>
+            <template slot-scope="scope">
+              <el-tag :type="setTagType(scope.row.status)">{{ scope.row.status_text }}</el-tag>
+            </template>
           </el-table-column>
           <el-table-column
               label="操作">
             <template slot-scope="scope">
-              <el-button size="mini">充值</el-button>
-              <el-button
-                  size="mini"
-                  type="danger">取消</el-button>
+              <!--等待审核-->
+              <el-button size="mini" type="primary" @click="doDeposit">充值</el-button>
+              <el-button size="mini" type="danger" @click="cancelDeposit(scope.row.id)">取消</el-button>
+<!--              <div v-if="scope.row.status == 1">-->
+<!--                <el-button size="mini" type="primary" @click="doDeposit">充值</el-button>-->
+<!--                <el-button size="mini" type="danger" @click="cancelDeposit">取消</el-button>-->
+<!--              </div>-->
+<!--              <div v-else>-->
+<!--                <el-button size="mini" type="primary" disabled>充值</el-button>-->
+<!--                <el-button size="mini" type="danger" disabled>取消</el-button>-->
+<!--              </div>-->
             </template>
           </el-table-column>
         </el-table>
@@ -129,14 +142,23 @@
 </template>
 
 <script>
+import api from "@/util/api";
 export default {
   name: "TransferOrder",
   data() {
     return {
       recordData: [],
       search: {
-        time: null,
+        type: 1,      // 转账类型1:支付宝,2:微信
+        dateRange: [],
+        status: '0',
+        status_text: '全部',
+        order_number: '',
         statusList: [
+          {
+            value: '0',
+            label: '全部'
+          },
           {
             value: '1',
             label: '等待审核'
@@ -153,16 +175,13 @@ export default {
             value: '4',
             label: '超时订单'
           }
-        ],
-        status: '',
-        account: '',
-        name: ''
+        ]
       },
       pagination: {
         pageSizes: [10, 20, 50, 100],
         pageSize: 10,
-        currentPage: 4,
-        total: 100
+        currentPage: 1,
+        total: 0
       }
     }
   },
@@ -174,19 +193,75 @@ export default {
       alert('提现记录');
     },
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      this.pagination.pageSize = val;
+      this.queryList();
     },
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
     },
-    doSearch(type) {
-      console.log(this.search);
+    doStatusChange(val) {
+      this.search.status = val;
+    },
+    doSearch() {
+      this.queryList();
+    },
+    queryList() {
+      api.getTransferList({
+        type: this.search.type,
+        start_time: this.search.dateRange[0],
+        end_time: this.search.dateRange[1],
+        status: this.search.status,
+        order_number: this.search.order_number,
+        current_page: this.pagination.currentPage,
+        per_page: this.pagination.pageSize
+      }).then(res => {
+        let result = res.data;
+        this.pagination.total = result.total;
+        this.recordData = result.data;
+      })
+    },
+    // 充值
+    doDeposit() {
+      this.$confirm('是否确认充值？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        });
+      }).catch(() => {
+      });
+    },
+    // 取消充值
+    cancelDeposit(orderNo) {
+      console.log(orderNo);
+      this.$confirm('确认要取消？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        api.cancelOrder({
+          id: orderNo
+        })
+      }).catch(() => {
+      });
+    },
+    setTagType(status) {
+      if(status == '1') {
+        // 1:等待审核
+        return 'warning';
+      } else if(status == '2') {
+        // 2:审核通过
+        return 'success';
+      }
+      // 3:订单取消,4:超时订单
+      return 'danger';
     }
   },
   mounted() {
-    this.axios.get('/finance/order').then((res) => {
-      this.recordData = res.data;
-    })
+    this.queryList();
   }
 }
 </script>

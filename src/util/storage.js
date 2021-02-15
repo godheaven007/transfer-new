@@ -1,5 +1,5 @@
 /**
- * 封装localStorage
+ * 封装sessionStorage
  * @type {string}
  */
 const STORAGE_KEY = 'transfer';
@@ -16,7 +16,7 @@ export default {
         } else {
             let val = this.getStorage();
             val[key] = value;
-            window.localStorage.setItem(STORAGE_KEY, JSON.stringify(val));
+            window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(val));
         }
     },
     // 获取某一个模块下面的属性
@@ -29,7 +29,7 @@ export default {
     },
     // 获取所有storage对象
     getStorage() {
-        return JSON.parse(window.localStorage.getItem(STORAGE_KEY) || '{}');
+        return JSON.parse(window.sessionStorage.getItem(STORAGE_KEY) || '{}');
     },
     clear(key, module_name) {
         let val = this.getStorage();
@@ -40,6 +40,6 @@ export default {
         } else {
             delete val[key];
         }
-        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(val));
+        window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(val));
     }
 }

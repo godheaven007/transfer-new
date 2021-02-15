@@ -50,7 +50,6 @@
 </template>
 
 <script>
-import Storage from '@/util/storage';
 import api from "@/util/api";
 import {Message} from "element-ui";
 
@@ -97,7 +96,7 @@ export default {
           duration: 2000,
           message: res.msg
         });
-        Storage.setItem('token', res.data.token);
+        window.localStorage.setItem('token', res.data.token);
         setTimeout(() => {
           this.$router.push('/');
         },2000);

@@ -188,42 +188,38 @@ export default {
       search: {
         time: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
         statusList: [
-            {
-              value: '0',
-              label: '全部'
-            },
-            {
-              value: '1',
-              label: '等待审核'
-            },
-            {
-              value: '2',
-              label: '等待转账'
-            },
-            {
-              value: '3',
-              label: '转账成功'
-            },
-            {
-              value: '4',
-              label: '转账异常'
-            },
-            {
-              value: '5',
-              label: '转账失败'
-            },
-            {
-              value: '6',
-              label: '已提现'
-            },
-            {
-              value: '7',
-              label: '转账取消'
-            },
-            {
-              value: '8',
-              label: '账号异常'
-            }
+          {
+            value: '0',
+            label: '全部'
+          },
+          {
+            value: '1',
+            label: '等待审核'
+          },
+          {
+            value: '2',
+            label: '等待转账'
+          },
+          {
+            value: '3',
+            label: '转账成功'
+          },
+          {
+            value: '4',
+            label: '转账异常'
+          },
+          {
+            value: '5',
+            label: '转账失败'
+          },
+          {
+            value: '6',
+            label: '转账取消'
+          },
+          {
+            value: '7',
+            label: '账号异常'
+          }
         ],
         status: '',
         account: '',
@@ -284,9 +280,9 @@ export default {
     };
   },
   mounted() {
-    this.axios.get('/finance/record').then((res) => {
-      this.recordData = res.data;
-    })
+    // this.axios.get('/finance/record').then((res) => {
+    //   this.recordData = res.data;
+    // })
   },
   methods: {
     handleSizeChange(val) {

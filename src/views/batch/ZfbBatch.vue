@@ -3,17 +3,20 @@
     <custom-step :currentStep="3"></custom-step>
     <div class="upload-wrap">
       <el-upload
+          ref="upload"
           class="upload"
           drag
           :show-file-list="false"
-          :on-change="handleChange"
+          :limit="1"
+          accept='.xls,.xlsx'
+          :http-request="uploadCustom"
           action="">
         <i class="el-icon-upload"></i>
         <div class="el-upload__text"><em>点击上传</em></div>
         <div class="el-upload__tip" slot="tip">
           <div class="info-wrap">
             <ul class="info">
-              <li>1.请务必按照模板格式填写上传，<a class="strong" href="/excel/量付通批量转账模板 .xlsx" target="_blank">下载模板</a></li>
+              <li>1.请务必按照模板格式填写上传，<a class="strong" style="cursor: pointer;" @click="downLoadTemplate" target="_blank">下载模板</a></li>
               <li>2.使用量付通官方支付宝转账单笔转账最低 <span class="strong">1元</span></li>
               <li>3.每次最多上传 <span class="strong">2000</span> 笔转账</li>
             </ul>
@@ -26,6 +29,9 @@
 
 <script>
 import CustomStep from "@/components/CustomStep";
+import Storage from '@/util/storage';
+import api from "@/util/api";
+
 export default {
   name: "ZfbBatch",
   components: {
@@ -33,37 +39,19 @@ export default {
   },
   data() {
     return {
-      fileContent: '',
-      tableData: [],
-      file: '',
-      data: ''
+      uploadUrl: '/transfer/batchTransferByExcel'
     }
   },
   methods: {
-    handleChange(file, fileList) {
-      this.fileContent = file.raw;
-      let fileName = file.name;
-      let fileType = fileName.substring(fileName.lastIndexOf('.') + 1);
-      if (this.fileContent) {
-        if (fileType === 'xlsx' || fileType === 'xls') {
-          this.importfile(this.fileContent)
-        } else {
-          this.$message({
-            type: 'warning',
-            message: '附件格式错误，请重新上传！'
-          })
-        }
-      } else {
-        this.$message({
-          type: 'warning',
-          message: '请上传附件！'
-        })
-      }
-    },
-    importfile(obj) {
+    /**
+     * 前端本地上传excel文件，需浏览器支持
+     * @param file
+     * @param fileList
+     */
+    importFile(_file) {
       let reader = new FileReader();
 
-      reader.readAsArrayBuffer(obj)
+      reader.readAsArrayBuffer(_file)
       reader.onload = () => {
         let buffer = reader.result,
             bytes = new Uint8Array(buffer),
@@ -84,19 +72,60 @@ export default {
             if(key == '备注内容（非必填）') {
               o.remark = item[key];
             } else if(key == '姓名（非必填）') {
-              o.name = item[key];
+              o.real_name = item[key];
             } else if(key == '转账金额（2位小数）') {
-              o.money = item[key];
+              o.amount = item[key];
             } else {
-              o.account = item[key];
+              o.payee = item[key];
             }
           }
           result.push(o);
         });
 
-        localStorage.setItem('transfer_sure', JSON.stringify(result));
+        Storage.setItem('sureList', result);
         this.$router.push({path: '/transferByZFB/submit'});
       }
+    },
+
+    uploadCustom(param) {
+      let file = param.file,
+          isLt2M = file.size / 1024 / 1024 < 2;
+      if (!isLt2M) {
+        this.$message.error("请上传2M以下的excel文件");
+        return false;
+      }
+
+      // 通过 FormData 对象上传文件
+      let formData = new FormData();
+      formData.append("file", file);
+      formData.append("type", '1');             // 1:支付宝,2:微信
+      formData.append("official", '1');         // 1:官方账户,2:企业账户
+
+      this.axios.post(`/transfer/batchTransferByExcel`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data', 'Authorization': window.localStorage.getItem('token') }}
+          ).then(res => {
+            let result = res.data;
+
+        if(result.code == 1) {
+              this.importFile(file);
+              Storage.setItem('sureInfo', {
+                amount: result.data.amount,
+                batch_order_number: result.data.batch_order_number,
+                charges: result.data.charges,
+                qr_url: result.data.qr_url,
+                recharge: result.data.recharge
+              });
+            }
+          }).catch(error => {
+            this.$message.error(error);
+          })
+    },
+    downLoadTemplate() {
+      api.downloadTransferExcel({
+        type: 1
+      }).then(res => {
+        window.location.href = res.data.url;
+      })
     }
   }
 }

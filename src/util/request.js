@@ -43,7 +43,6 @@ service.interceptors.response.use(response => {
     //接收到响应数据并成功后的一些共有的处理，关闭loading等
     // 如果返回的状态码为200，说明接口请求成功，可以正常拿到数据
     // 否则的话抛出错误
-    console.log(response);
     if (response.status === 200) {
         return handleResponse(response.data);
     } else {

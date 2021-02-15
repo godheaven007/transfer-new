@@ -25,8 +25,29 @@ export default{
     /**
      * 转账模块
      */
-    downloadTransferExce(param) {
-        return http.get(`/transfer/downloadTransferExce`, param);
+    // 支付宝批量转账接口
+    batchTransfer(param) {
+        return http.post(`/transfer/batchTransfer`, param);
+    },
+    // 批量转账上传excel接口
+    batchTransferByExcel(param) {
+      return http.post(`/transfer/batchTransferByExcel`, param);
+    },
+    // 下载转账excel模板
+    downloadTransferExcel(param) {
+        return http.get(`/transfer/downloadTransferExcel`, param);
+    },
+    // 获取转账订单列表
+    getBatchList(param) {
+        return http.get(`/transfer/getBatchList`, param);
+    },
+    // 获取批量转账记录列表
+    getTransferList(param) {
+        return http.get(`/transfer/getTransferList`, param);
+    },
+    // 取消订单
+    cancelOrder(param) {
+        return http.get(`/transfer/cancelOrder`, param)
     },
     /**
      * 支持模块

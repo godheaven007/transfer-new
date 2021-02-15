@@ -191,8 +191,6 @@ export default {
         this.person.user_login = data.user_login;
         this.user_login = data.user_login;
         this.person.member_expire_time = data.member_expire_time;
-
-        console.log(this.person, 666);
       })
     }
   },

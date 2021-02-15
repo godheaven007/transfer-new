@@ -82,7 +82,7 @@ export default {
   },
   mounted() {
     this.axios.get('/home/personalInfo', {
-      headers: {'Authorization':  Storage.getItem('token')}
+      headers: {'Authorization':  window.localStorage.getItem('token')}
     }).then( res => {
       if(res.data.code == 1) {
         this.level_text = res.data.data.level_text;

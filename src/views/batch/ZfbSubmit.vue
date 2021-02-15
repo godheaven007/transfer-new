@@ -9,29 +9,29 @@
             stripe
             :data="model.list">
           <el-table-column
-              key="account"
+              key="payee"
               label="支付宝账号">
             <template slot-scope="scope">
-              <el-form-item :prop="'list.' + scope.$index + '.account'" :rules="rules.account">
-                <el-input v-model="scope.row.account" placeholder="请输入支付宝账号" maxlength="11" size="medium"></el-input>
+              <el-form-item :prop="'list.' + scope.$index + '.payee'" :rules="rules.payee">
+                <el-input v-model="scope.row.payee" placeholder="请输入支付宝账号" maxlength="64" size="medium"></el-input>
               </el-form-item>
             </template>
           </el-table-column>
           <el-table-column
-              key="name"
+              key="real_name"
               label="姓名">
             <template slot-scope="scope">
-              <el-form-item :prop="'list.' + scope.$index + '.name'" :rules="rules.name">
-                <el-input v-model="scope.row.name" placeholder="姓名" size="medium"></el-input>
+              <el-form-item :prop="'list.' + scope.$index + '.real_name'" :rules="rules.real_name">
+                <el-input v-model="scope.row.real_name" placeholder="姓名" maxlength="20" size="medium"></el-input>
               </el-form-item>
             </template>
           </el-table-column>
           <el-table-column
-              key="money"
+              key="amount"
               label="转账金额（元）">
             <template slot-scope="scope">
-              <el-form-item :prop="'list.' + scope.$index + '.money'" :rules="rules.money">
-                <el-input v-model="scope.row.money" placeholder="只能输入2位小数" size="medium"></el-input>
+              <el-form-item :prop="'list.' + scope.$index + '.amount'" :rules="rules.amount">
+                <el-input v-model="scope.row.amount" placeholder="只能输入2位小数" size="medium"></el-input>
               </el-form-item>
             </template>
           </el-table-column>
@@ -56,10 +56,10 @@
       <!--统计-->
       <ul class="statistics">
         <li>共计: {{ this.model.list.length }} 笔</li>
-        <li>手续费: 0.30元</li>
-        <li>转账金额: {{ getMoney }}元</li>
+        <li>手续费: {{ this.model.info.charges }}元</li>
+        <li>转账金额: {{ this.model.info.amount }}元</li>
       </ul>
-      <div class="total"><b>总计</b>:  <span class="strong">60.30元</span></div>
+      <div class="total"><b>总计</b>:  <span class="strong">{{ this.model.info.recharge }}元</span></div>
       <div class="operate">
         <el-button class="resetBtn add" @click="doReset">重新填写</el-button>
         <el-button class="ml20 baseBtn submit" @click="doSubmit">提交转账</el-button>
@@ -71,6 +71,9 @@
 <script>
 import CustomStep from "@/components/CustomStep";
 import Util from '@/util';
+import Storage from '@/util/storage';
+import api from "@/util/api";
+
 export default {
   name: "ZfbSubmit",
   components: {
@@ -81,16 +84,23 @@ export default {
       model: {
         list: [
 
-        ]
+        ],
+        info: {
+          amount: '',
+          batch_order_number: '',
+          charges: '',
+          qr_url: '',
+          recharge: ''
+        }
       },
       rules: {
-        account: [
+        payee: [
           { required: true, message: '支付宝账号必填', trigger: 'blur' },
         ],
-        name: [
+        real_name: [
           { required: true, message: '姓名必填', trigger: 'blur' },
         ],
-        money: [
+        amount: [
           { required: true, message: '转账金额必填', trigger: 'blur' },
           { validator: this.validateMoney, trigger: 'blur' }
         ]
@@ -106,13 +116,20 @@ export default {
       callback();
     },
     doReset() {
-      localStorage.removeItem('transfer_sure');
+      Storage.clear('sureList');
+      Storage.clear('sureInfo');
       this.$router.push({path: '/transferByZFB'});
     },
     doSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-
+          api.batchTransfer({
+            type: 1,
+            official: 1,
+            transfers: this.model.list
+          }).then(res => {
+            console.log(res, 888);
+          })
         } else {
           this.$message({
             message: '数据填写存在错误！',
@@ -125,20 +142,11 @@ export default {
 
     handleDelete(index, row) {
       this.model.list.splice(index,1);
-      console.log(index, row);
-    }
-  },
-  computed: {
-    getMoney() {
-      let sum = 0;
-      this.model.list.forEach((item) => {
-        sum = Util.accAdd(sum, item.money);
-      });
-      return sum;
     }
   },
   mounted() {
-    this.model.list = JSON.parse(localStorage.getItem('transfer_sure'));
+    this.model.list = Storage.getItem('sureList');
+    this.model.info = Storage.getItem('sureInfo')
   }
 }
 </script>
