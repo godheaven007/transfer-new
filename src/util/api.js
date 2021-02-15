@@ -23,6 +23,12 @@ export default{
         return http.get(`/user/resetPassword`, param);
     },
     /**
+     * 转账模块
+     */
+    downloadTransferExce(param) {
+        return http.get(`/transfer/downloadTransferExce`, param);
+    },
+    /**
      * 支持模块
      */
     // 获取短信验证码

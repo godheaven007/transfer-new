@@ -106,7 +106,7 @@
                 </tr>
                 <tr>
                   <td>绑定QQ</td>
-                  <td>{{ person.bind_qq }}</td>
+                  <td>{{ person.bind_qq || '未绑定'}}</td>
                 </tr>
                 <tr>
                   <td>会员级别</td>
@@ -114,7 +114,7 @@
                 </tr>
                 <tr>
                   <td>到期时间</td>
-                  <td>{{ person.member_expire_time }}</td>
+                  <td>{{ person.member_expire_time || '--' }}</td>
                 </tr>
               </tbody>
             </table>
@@ -159,7 +159,13 @@ export default {
           url: '/video/batch.mp4'
         }
       ],
-      person: {}
+      person: {
+        user_login: '',
+        bind_qq: '',
+        level: '',
+        level_text: '',
+        member_expire_time: ''
+      }
     }
   },
   methods: {
@@ -183,7 +189,10 @@ export default {
         this.person.level = data.level;
         this.person.level_text = data.level_text;
         this.person.user_login = data.user_login;
+        this.user_login = data.user_login;
         this.person.member_expire_time = data.member_expire_time;
+
+        console.log(this.person, 666);
       })
     }
   },
