@@ -56,10 +56,10 @@
       <!--统计-->
       <ul class="statistics">
         <li>共计: {{ this.model.list.length }} 笔</li>
-        <li>手续费: {{ getFee }}元</li>
-        <li>转账金额: {{ getTransferAmount }}元</li>
+        <li>手续费: {{ getFee() }}元</li>
+        <li>转账金额: {{ getTransferAmount() }}元</li>
       </ul>
-      <div class="total"><b>总计</b>:  <span class="strong">{{ getTotalAmount }}元</span></div>
+      <div class="total"><b>总计</b>:  <span class="strong">{{ getTotalAmount() }}元</span></div>
       <div class="operate">
         <el-button class="resetBtn add" @click="doReset">重新填写</el-button>
         <el-button class="ml20 baseBtn submit" @click="doSubmit">提交转账</el-button>
@@ -86,7 +86,7 @@ export default {
 
         ]
       },
-      fee: 0, // 手续费
+      fee: 10, // 手续费
       rules: {
         payee: [
           { required: true, message: '支付宝账号必填', trigger: 'blur' },
@@ -113,6 +113,23 @@ export default {
       Storage.clear('sureList');
       this.$router.push({path: '/transferByZFB'});
     },
+    handleDelete(index, row) {
+      this.model.list.splice(index,1);
+    },
+    getTransferAmount() {
+      let sum = 0;
+      this.model.list.forEach((item) => {
+        sum = Util.accAdd(sum, item.amount);
+      })
+      return sum;
+    },
+    getFee() {
+      return this.fee;
+    },
+    getTotalAmount() {
+      return this.getTransferAmount() + this.getFee();
+    },
+
     doSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
@@ -131,25 +148,6 @@ export default {
           return false;
         }
       });
-    },
-
-    handleDelete(index, row) {
-      this.model.list.splice(index,1);
-    }
-  },
-  computed: {
-    getTransferAmount() {
-      let sum = 0;
-      this.model.list.forEach((item) => {
-        sum = Util.accAdd(sum, item.amount);
-      })
-      return sum;
-    },
-    getFee() {
-      return this.fee;
-    },
-    getTotalAmount() {
-      return this.getTransferAmount() + this.getFee();
     }
   },
   mounted() {
