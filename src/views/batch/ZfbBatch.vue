@@ -108,13 +108,13 @@ export default {
 
         if(result.code == 1) {
               this.importFile(file);
-              Storage.setItem('sureInfo', {
-                amount: result.data.amount,
-                batch_order_number: result.data.batch_order_number,
-                charges: result.data.charges,
-                qr_url: result.data.qr_url,
-                recharge: result.data.recharge
-              });
+              // Storage.setItem('sureInfo', {
+              //   amount: result.data.amount,
+              //   batch_order_number: result.data.batch_order_number,
+              //   charges: result.data.charges,
+              //   qr_url: result.data.qr_url,
+              //   recharge: result.data.recharge
+              // });
             }
           }).catch(error => {
             this.$message.error(error);
