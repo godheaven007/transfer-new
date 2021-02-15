@@ -9,29 +9,29 @@
           stripe
           :data="model.list">
         <el-table-column
-            key="account"
+            key="payee"
             label="支付宝账号">
           <template slot-scope="scope">
-            <el-form-item :prop="'list.' + scope.$index + '.account'" :rules="rules.account">
-              <el-input v-model="scope.row.account" placeholder="请输入支付宝账号" maxlength="11" size="medium"></el-input>
+            <el-form-item :prop="'list.' + scope.$index + '.payee'" :rules="rules.payee">
+              <el-input v-model="scope.row.payee" placeholder="请输入支付宝账号" maxlength="64" size="medium"></el-input>
             </el-form-item>
           </template>
         </el-table-column>
         <el-table-column
-            key="name"
+            key="real_name"
             label="姓名">
           <template slot-scope="scope">
-            <el-form-item :prop="'list.' + scope.$index + '.name'" :rules="rules.name">
-              <el-input v-model="scope.row.name" placeholder="姓名" size="medium"></el-input>
+            <el-form-item :prop="'list.' + scope.$index + '.real_name'" :rules="rules.real_name">
+              <el-input v-model="scope.row.real_name" placeholder="姓名" maxlength="20" size="medium"></el-input>
             </el-form-item>
           </template>
         </el-table-column>
         <el-table-column
-            key="money"
+            key="amount"
             label="转账金额（元）">
           <template slot-scope="scope">
-            <el-form-item :prop="'list.' + scope.$index + '.money'" :rules="rules.money">
-              <el-input v-model="scope.row.money" placeholder="只能输入2位小数" size="medium"></el-input>
+            <el-form-item :prop="'list.' + scope.$index + '.amount'" :rules="rules.amount">
+              <el-input v-model="scope.row.amount" placeholder="只能输入2位小数" size="medium"></el-input>
             </el-form-item>
           </template>
         </el-table-column>
@@ -63,6 +63,8 @@
 
 <script>
 import CustomStep from "@/components/CustomStep";
+import Storage from '@/util/storage';
+
 export default {
   name: "ZfbManual",
   components: {
@@ -73,21 +75,21 @@ export default {
       model: {
         list: [
           {
-            account: '',
-            name: '',
-            money: '',
+            payee: '',
+            real_name: '',
+            amount: '',
             remark: ''
           }
         ]
       },
       rules: {
-        account: [
+        payee: [
           { required: true, message: '支付宝账号必填', trigger: 'blur' },
         ],
-        name: [
+        real_name: [
           { required: true, message: '姓名必填', trigger: 'blur' },
         ],
-        money: [
+        amount: [
           { required: true, message: '转账金额必填', trigger: 'blur' },
           { validator: this.validateMoney, trigger: 'blur' }
         ]
@@ -104,30 +106,23 @@ export default {
     },
     doAdd() {
       this.model.list.push({
-        account: '',
-        name: '',
-        money: '',
+        payee: '',
+        real_name: '',
+        amount: '',
         remark: ''
       })
     },
     doSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          localStorage.setItem('transfer_sure', JSON.stringify(this.model.list));
+          Storage.setItem('sureList', this.model.list);
           this.$router.push({path: '/transferByZFB/submit'});
-        } else {
-          this.$message({
-            message: '数据填写存在错误！',
-            type: 'warning'
-          });
-          return false;
         }
       });
     },
 
     handleDelete(index, row) {
       this.model.list.splice(index,1);
-      console.log(index, row);
     }
   },
   mounted() {
@@ -140,11 +135,11 @@ export default {
 @import "@/assets/scss/base";
 @import "@/assets/scss/mixin";
 .wrap {
-  width: 80%;
+  width: 85%;
   margin: 0 auto;
   padding: 40px 0 0 0;
   .list {
-    width: 70%;
+    width: 80%;
     margin: 40px auto 0;
     .operate {
       margin-top: 20px;

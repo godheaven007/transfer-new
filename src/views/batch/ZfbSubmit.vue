@@ -56,10 +56,10 @@
       <!--统计-->
       <ul class="statistics">
         <li>共计: {{ this.model.list.length }} 笔</li>
-        <li>手续费: {{ this.model.info.charges }}元</li>
-        <li>转账金额: {{ this.model.info.amount }}元</li>
+        <li>手续费: {{ getFee }}元</li>
+        <li>转账金额: {{ getTransferAmount }}元</li>
       </ul>
-      <div class="total"><b>总计</b>:  <span class="strong">{{ this.model.info.recharge }}元</span></div>
+      <div class="total"><b>总计</b>:  <span class="strong">{{ getTotalAmount }}元</span></div>
       <div class="operate">
         <el-button class="resetBtn add" @click="doReset">重新填写</el-button>
         <el-button class="ml20 baseBtn submit" @click="doSubmit">提交转账</el-button>
@@ -84,15 +84,9 @@ export default {
       model: {
         list: [
 
-        ],
-        info: {
-          amount: '',
-          batch_order_number: '',
-          charges: '',
-          qr_url: '',
-          recharge: ''
-        }
+        ]
       },
+      fee: 0, // 手续费
       rules: {
         payee: [
           { required: true, message: '支付宝账号必填', trigger: 'blur' },
@@ -117,7 +111,6 @@ export default {
     },
     doReset() {
       Storage.clear('sureList');
-      Storage.clear('sureInfo');
       this.$router.push({path: '/transferByZFB'});
     },
     doSubmit() {
@@ -144,9 +137,23 @@ export default {
       this.model.list.splice(index,1);
     }
   },
+  computed: {
+    getTransferAmount() {
+      let sum = 0;
+      this.model.list.forEach((item) => {
+        sum = Util.accAdd(sum, item.amount);
+      })
+      return sum;
+    },
+    getFee() {
+      return this.fee;
+    },
+    getTotalAmount() {
+      return this.getTransferAmount() + this.getFee();
+    }
+  },
   mounted() {
     this.model.list = Storage.getItem('sureList');
-    this.model.info = Storage.getItem('sureInfo')
   }
 }
 </script>
@@ -155,11 +162,11 @@ export default {
 @import "@/assets/scss/base";
 @import "@/assets/scss/mixin";
 .wrap {
-  width: 80%;
+  width: 85%;
   margin: 0 auto;
   padding: 40px 0 0 0;
   .list {
-    width: 70%;
+    width: 82%;
     margin: 40px auto 0;
     .operate {
       margin-top: 20px;
