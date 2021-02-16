@@ -130,5 +130,29 @@ export default {
         day = this.str_pad(day, 2);
 
         return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+    },
+    /**
+     * 获取上个月的当前时间（YYYY-MM-DD HH:MM:SS）
+     * @returns {string}
+     */
+    getLastMonthCurDate() {
+        let date = new Date();
+        let lastMonth = date.getMonth() - 1;
+        if (lastMonth < 0) {
+            date.setFullYear(date.getFullYear() - 1);
+            date.setMonth(11);
+        } else {
+            date.setMonth(lastMonth);
+        }
+
+        return this.getFormatDate(date);
+    },
+
+    /**
+     * 获取当前时间日期格式（YYYY-MM-DD HH:MM:SS）
+     * @returns {string}
+     */
+    getNowDate() {
+        return this.getFormatDate(new Date());
     }
 }

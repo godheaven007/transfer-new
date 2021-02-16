@@ -9,7 +9,7 @@
               <el-form :inline="true">
                 <el-form-item label="日期范围">
                   <el-date-picker
-                      v-model="search.time"
+                      v-model="search.timeRange"
                       type="datetimerange"
                       range-separator="-"
                       start-placeholder="开始时间"
@@ -17,7 +17,7 @@
                   </el-date-picker>
                 </el-form-item>
                 <el-form-item label="转账状态" class="ml10">
-                  <el-select v-model="search.status" placeholder="请选择">
+                  <el-select v-model="search.status" placeholder="请选择" @change="doStatusChange">
                     <el-option
                         v-for="item in search.statusList"
                         :key="item.value"
@@ -46,23 +46,23 @@
                   id="out-table"
                   :data="recordData">
                 <el-table-column
-                    prop="date"
+                    prop="create_time"
                     label="日期">
                 </el-table-column>
                 <el-table-column
-                    prop="orderNo"
+                    prop="order_number"
                     label="商户订单号">
                 </el-table-column>
                 <el-table-column
-                    prop="account"
+                    prop="payee"
                     label="支付宝账号">
                 </el-table-column>
                 <el-table-column
-                    prop="name"
+                    prop="real_name"
                     label="姓名">
                 </el-table-column>
                 <el-table-column
-                    prop="money"
+                    prop="amount"
                     label="金额">
                 </el-table-column>
                 <el-table-column
@@ -72,12 +72,16 @@
                 <el-table-column
                     prop="type"
                     label="转账类型">
+                  <template slot-scope="scope">
+                    <span v-if="scope.row.type == 1">公用支付宝</span>
+                    <span v-else>微信</span>
+                  </template>
                 </el-table-column>
                 <el-table-column
                     prop="status"
                     label="状态">
                   <template slot-scope="scope">
-                    <el-tag type="danger">{{ scope.row.status }}</el-tag>
+                    <el-tag :type="setTagType(scope.row.status)">{{ scope.row.status_text }}</el-tag>
                   </template>
                 </el-table-column>
               </el-table>
@@ -102,7 +106,7 @@
               <el-form :inline="true">
                 <el-form-item label="日期范围">
                   <el-date-picker
-                      v-model="search2.time"
+                      v-model="search2.timeRange"
                       type="datetimerange"
                       range-separator="-"
                       start-placeholder="开始时间"
@@ -180,13 +184,19 @@
 
 <script>
 import Util from '@/util'
+import api from "@/util/api";
 export default {
   name: "TransferRecord",
   data() {
     return {
       activeName: 'zfb',
       search: {
-        time: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
+        type: 1,      // 转账类型1:支付宝,2:微信
+        timeRange: [Util.getLastMonthCurDate(), Util.getNowDate()],
+        status: '0',
+        status_text: '全部',
+        payee: '',                // 转账账号
+        real_name: '',            // 转账姓名
         statusList: [
           {
             value: '0',
@@ -221,12 +231,14 @@ export default {
             label: '账号异常'
           }
         ],
-        status: '',
-        account: '',
-        name: ''
       },
       search2: {
-        time: [new Date(2000, 10, 10, 10, 10), new Date(2000, 10, 11, 10, 10)],
+        type: 2,      // 转账类型1:支付宝,2:微信
+        timeRange: [Util.getLastMonthCurDate(), Util.getNowDate()],
+        status: '0',
+        status_text: '全部',
+        payee: '',                // 转账账号
+        real_name: '',            // 转账姓名
         statusList: [
           {
             value: '0',
@@ -254,45 +266,57 @@ export default {
           },
           {
             value: '6',
-            label: '已提现'
-          },
-          {
-            value: '7',
             label: '转账取消'
           },
           {
-            value: '8',
+            value: '7',
             label: '账号异常'
           }
-        ],
-        status: '',
-        account: '',
-        name: ''
+        ]
       },
       pagination: {
         pageSizes: [10, 20, 50, 100],
         pageSize: 10,
-        currentPage: 4,
-        total: 100
+        currentPage: 1,
+        total: 0
       },
       recordData: [],
       recordData2: [],
     };
   },
   mounted() {
-    // this.axios.get('/finance/record').then((res) => {
-    //   this.recordData = res.data;
-    // })
+    this.queryList();
   },
   methods: {
     handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+      this.pagination.pageSize = val;
+      this.queryList();
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.pagination.currentPage = val;
+      this.queryList();
+    },
+    doStatusChange(val) {
+      this.search.status = val;
     },
     doSearch(type) {
-      console.log(this.search);
+      this.queryList();
+    },
+    queryList() {
+      api.getTransferList({
+        type: this.search.type,
+        start_time: this.search.timeRange[0],
+        end_time: this.search.timeRange[1],
+        status: this.search.status,
+        payee: this.search.payee,
+        real_name: this.search.real_name,
+        current_page: this.pagination.currentPage,
+        per_page: this.pagination.pageSize
+      }).then(res => {
+        let result = res.data;
+        this.pagination.total = result.total;
+        this.recordData = result.data;
+      })
     },
     doExport(type) {
       let tables = document.getElementById("out-table");
@@ -311,6 +335,17 @@ export default {
         if (typeof console !== "undefined") console.log(e, table_write);
       }
       return table_write;
+    },
+    setTagType(status) {
+      if(status == '1' || status == '2') {
+        // 1:等待审核 2:等待转账
+        return 'warning';
+      } else if(status == '3') {
+        // 3:转账成功
+        return 'success';
+      }
+      // 4:转账异常,5:转账失败,6:转账取消,7:账号异常
+      return 'danger';
     }
   }
 }
