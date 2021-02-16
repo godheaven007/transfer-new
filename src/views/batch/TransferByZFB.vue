@@ -15,7 +15,7 @@
         <div class="item">
           <div class="title">量付通官方支付宝转账</div>
           <p>借用量付通官方企业支付宝账户进行</p>
-          <p>转账，需提前充值到该账户，手续费 0%，单笔</p>
+          <p>转账，需提前充值到该账户，手续费 <em>0</em>%，单笔</p>
           <p>最低<em> 1 </em>元，每日限额<em> 10 </em>万元。</p>
           <el-button size="medium" class="baseBtn" @click="selectZbfMode">选择</el-button>
         </div>

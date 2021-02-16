@@ -65,6 +65,18 @@
         <el-button class="ml20 baseBtn submit" @click="doSubmit">提交转账</el-button>
       </div>
     </div>
+    <el-dialog
+        title="提示"
+        width="500px"
+        :visible.sync="dialogVisible"
+        :close-on-click-modal="false"
+        :close-on-press-escape="false">
+      <span>数据提交后无法撤回，是否确认提交？</span>
+      <span slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="doConfirmSubmit">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -98,7 +110,8 @@ export default {
           { required: true, message: '转账金额必填', trigger: 'blur' },
           { validator: this.validateMoney, trigger: 'blur' }
         ]
-      }
+      },
+      dialogVisible: false
     }
   },
   methods: {
@@ -130,16 +143,25 @@ export default {
       return this.getTransferAmount() + this.getFee();
     },
 
+    // 确认提交
+    doConfirmSubmit() {
+      api.batchTransfer({
+        type: 1,
+        official: 1,
+        transfers: this.model.list
+      }).then(res => {
+        this.dialogVisible = false;
+        this.$pay({
+          payAmount: parseFloat(res.data.recharge),
+          qrCodeUrl: res.data.qr_url
+        })
+      })
+    },
+
     doSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          api.batchTransfer({
-            type: 1,
-            official: 1,
-            transfers: this.model.list
-          }).then(res => {
-            console.log(res, 888);
-          })
+          this.dialogVisible = true;
         } else {
           this.$message({
             message: '数据填写存在错误！',

@@ -6,7 +6,8 @@ import XLSX from 'xlsx'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import plugin from "@/plugin";
+import pluginVideo from "@/plugin-video"
+import pluginPay from "@/plugin-pay"
 import 'element-ui/lib/theme-chalk/index.css'
 
 // mock开关
@@ -128,7 +129,8 @@ Vue.prototype.$message = Message;
 Vue.prototype.$FileSaver = FileSaver;
 Vue.prototype.$XLSX = XLSX;
 Vue.use(VueAxios, axios);
-Vue.use(plugin);
+Vue.use(pluginVideo);
+Vue.use(pluginPay);
 Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => {
