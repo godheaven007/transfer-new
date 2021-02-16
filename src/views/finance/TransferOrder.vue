@@ -110,7 +110,7 @@
               label="操作">
             <template slot-scope="scope">
               <!--等待审核-->
-              <el-button size="mini" type="primary" @click="doDeposit">充值</el-button>
+              <el-button size="mini" type="primary" @click="doDeposit(scope.row.id, scope.row.recharge)">充值</el-button>
               <el-button size="mini" type="danger" @click="cancelDeposit(scope.row.id)">取消</el-button>
 <!--              <div v-if="scope.row.status == 1">-->
 <!--                <el-button size="mini" type="primary" @click="doDeposit">充值</el-button>-->
@@ -143,6 +143,8 @@
 
 <script>
 import api from "@/util/api";
+import {Message} from 'element-ui';
+
 export default {
   name: "TransferOrder",
   data() {
@@ -222,41 +224,47 @@ export default {
       })
     },
     // 充值
-    doDeposit() {
+    doDeposit(_id, amount) {
+      var _this = this;
       this.$confirm('是否确认充值？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
+        closeOnClickModal: false,
         type: 'warning'
       }).then(() => {
-        // this.$message({
-        //   type: 'success',
-        //   message: '删除成功!'
-        // });
         api.recharge({
-          id: 1,
+          id: _id,
           type: 1
+        }).then(res => {
+          this.$pay({
+            payAmount: parseFloat(amount),
+            qrCodeUrl: res.data.url,
+            showClose: true,
+            callback() {
+              console.log('轮询订单是否充值成功？');
+              // _this.queryList();
+            }
+          });
         })
-        this.$pay({
-          payAmount: 1,
-          qrCodeUrl: 2
-        });
-      }).catch((error) => {
-        this.$message({
-          type: 'error',
-          message: error
-        });
+      }).catch(() => {
       });
     },
     // 取消充值
-    cancelDeposit(orderNo) {
-      console.log(orderNo);
+    cancelDeposit(_id) {
       this.$confirm('确认要取消？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
+        closeOnClickModal: false,
         type: 'warning'
       }).then(() => {
         api.cancelOrder({
-          id: orderNo
+          id: _id
+        }).then(res => {
+          Message.success({
+            duration: 1500,
+            message: res.msg
+          });
+          this.queryList();
         })
       }).catch(() => {
       });

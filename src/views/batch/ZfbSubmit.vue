@@ -156,9 +156,10 @@ export default {
           payAmount: parseFloat(res.data.recharge),
           qrCodeUrl: res.data.qr_url
         });
-        Storage.clear('sureList');
+        // TODO...订单支付成功，清空
+        // Storage.clear('sureList');
       })
-    }, 1000),
+    }, 600),
     doSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {

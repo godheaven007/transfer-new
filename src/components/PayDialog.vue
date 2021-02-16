@@ -4,7 +4,7 @@
     <div class="pay-container">
       <div class="pay-head">
         <div class="title">付款</div>
-        <div class="close" @click="closePay()"></div>
+        <div class="close" @click="closePay()" v-if="showClose"></div>
       </div>
       <div class="pay-body">
         <h3>支付宝充值</h3>
@@ -24,19 +24,38 @@ export default {
   props: {
     payAmount: {
       type: Number,
-      require: true
+      required: true
     },
     qrCodeUrl: {
       type: String,
-      require: true
+      required: true
+    },
+    showClose: {
+      type: Boolean,
+      default: false
+    },
+    callback: {
+      type: Function,
+      default: function(){}
+    }
+  },
+  data() {
+    return {
+      timer: null
     }
   },
   methods: {
     closePay() {
+      clearInterval(this.timer);
       this.$emit('emptyInstance');
       this.$destroy();
       this.$el.remove();
     }
+  },
+  mounted() {
+    this.timer = setInterval(() => {
+      this.callback();
+    }, 1000);
   }
 }
 </script>
