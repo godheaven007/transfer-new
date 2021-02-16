@@ -68,7 +68,12 @@ export default {
       this.$router.push({path: 'vip'});
     },
     setCurrentRoute() {
-      this.activeMenuIndex= 'this.$route.path'; // 通过他就可以监听到当前路由状态并激活当前菜单
+      let path = this.$route.path;
+      if(path.indexOf('transferBy') != -1) {
+        this.activeMenuIndex = '/transferByZFB';
+      }
+      console.log(this.$route.path, 999);
+      // this.activeMenuIndex= 'this.$route.path'; // 通过他就可以监听到当前路由状态并激活当前菜单
     },
     doLogout() {
       Storage.clear('sureList');
@@ -78,12 +83,12 @@ export default {
   },
   watch: {
     $route() {
-      // console.log('路由变化了', this.$route.path);
-      // this.setCurrentRoute();
+      console.log('路由变化了', this.$route.path);
+      this.setCurrentRoute();
     }
   },
   created() {
-    // this.setCurrentRoute();
+    this.setCurrentRoute();
   },
   mounted() {
     this.axios.get('/home/personalInfo', {

@@ -128,6 +128,9 @@ export default {
 
         month = this.str_pad(month + 1, 2);
         day = this.str_pad(day, 2);
+        hours = this.str_pad(hours, 2);
+        minutes = this.str_pad(minutes, 2);
+        seconds = this.str_pad(seconds, 2);
 
         return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
     },
