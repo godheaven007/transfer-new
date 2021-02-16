@@ -18,7 +18,7 @@ export default {
     install(Vue, options) {
         Vue.prototype.$pay = function (opt) {
             if(curPayVm) {
-                curPayVm.close();
+                // curPayVm.close();
             }
             curPayVm = createPay({Vue, opt});
             curPayVm.$on('emptyInstance', function () {

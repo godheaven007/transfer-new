@@ -78,25 +78,25 @@
               label="转账时间">
           </el-table-column>
           <el-table-column
-              prop="order_number"
+              prop="batch_order_number"
               label="订单编号">
           </el-table-column>
           <el-table-column
-              prop="amount"
+              prop="amount_sum"
               label="转账金额">
           </el-table-column>
           <el-table-column
-              prop="prop4"
+              prop="charges"
               label="手续费">
           </el-table-column>
           <el-table-column
-              prop="prop5"
+              prop="recharge"
               label="充值金额">
           </el-table-column>
           <el-table-column
               label="付款类型">
             <template slot-scope="scope">
-              <span v-if="scope.row.type == 1">支付宝</span>
+              <span v-if="scope.row.type == 1">公用支付宝</span>
               <span v-else>微信</span>
             </template>
           </el-table-column>
@@ -197,7 +197,8 @@ export default {
       this.queryList();
     },
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      this.pagination.currentPage = val;
+      this.queryList();
     },
     doStatusChange(val) {
       this.search.status = val;
@@ -206,7 +207,7 @@ export default {
       this.queryList();
     },
     queryList() {
-      api.getTransferList({
+      api.getBatchList({
         type: this.search.type,
         start_time: this.search.dateRange[0],
         end_time: this.search.dateRange[1],
@@ -227,11 +228,23 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
+        // this.$message({
+        //   type: 'success',
+        //   message: '删除成功!'
+        // });
+        api.recharge({
+          id: 1,
+          type: 1
+        })
+        this.$pay({
+          payAmount: 1,
+          qrCodeUrl: 2
         });
-      }).catch(() => {
+      }).catch((error) => {
+        this.$message({
+          type: 'error',
+          message: error
+        });
       });
     },
     // 取消充值

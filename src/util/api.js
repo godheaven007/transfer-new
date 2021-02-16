@@ -45,6 +45,10 @@ export default{
     getTransferList(param) {
         return http.get(`/transfer/getTransferList`, param);
     },
+    // 订单充值
+    recharge(param) {
+        return http.get(`/transfer/recharge`, param);
+    },
     // 取消订单
     cancelOrder(param) {
         return http.get(`/transfer/cancelOrder`, param)

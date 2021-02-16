@@ -13,7 +13,7 @@
           <img :src="qrCodeUrl">
         </div>
       </div>
-      <div class="pay-foot">请在一分钟内完成付款!</div>
+      <div class="pay-foot">请在一分钟内完成付款,付款后请勿关闭此窗口否则将会造成充值失败！</div>
     </div>
   </div>
 </template>
@@ -56,8 +56,8 @@ export default {
     left:50%;
     transform:translate(-50%,-50%);
     z-index:10;
-    width:480px;
-    height:450px;
+    width:540px;
+    height:460px;
     background-color: #fff;
     opacity:1;
     .pay-head {

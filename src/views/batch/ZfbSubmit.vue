@@ -74,7 +74,7 @@
       <span>数据提交后无法撤回，是否确认提交？</span>
       <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="doConfirmSubmit">确 定</el-button>
+          <el-button type="primary" @click="doConfirmSubmit()">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -85,6 +85,7 @@ import CustomStep from "@/components/CustomStep";
 import Util from '@/util';
 import Storage from '@/util/storage';
 import api from "@/util/api";
+import debounce from 'lodash.debounce'
 
 export default {
   name: "ZfbSubmit",
@@ -144,7 +145,7 @@ export default {
     },
 
     // 确认提交
-    doConfirmSubmit() {
+    doConfirmSubmit: debounce(function() {
       api.batchTransfer({
         type: 1,
         official: 1,
@@ -154,10 +155,10 @@ export default {
         this.$pay({
           payAmount: parseFloat(res.data.recharge),
           qrCodeUrl: res.data.qr_url
-        })
+        });
+        Storage.clear('sureList');
       })
-    },
-
+    }, 1000),
     doSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
