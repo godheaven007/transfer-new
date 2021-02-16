@@ -43,6 +43,9 @@ export default {
         return str;
     },
 
+    /**
+     * 运算相关
+     */
     accAdd(arg1, arg2) {
         let r1, r2, m;
         try {
@@ -110,6 +113,22 @@ export default {
         r2 = Number(arg2.toString().replace(".", ""));
 
         return (r1 / r2) * Math.pow(10, t2 - t1);
-    }
+    },
 
+    /**
+     * 日期函数
+     */
+    getFormatDate(date) {
+        let year = date.getFullYear(),
+            month = date.getMonth(),
+            day = date.getDate(),
+            hours = date.getHours(),
+            minutes = date.getMinutes(),
+            seconds = date.getSeconds();
+
+        month = this.str_pad(month + 1, 2);
+        day = this.str_pad(day, 2);
+
+        return year + '-' + month + '-' + day + ' ' + hours + ':' + minutes + ':' + seconds;
+    }
 }
