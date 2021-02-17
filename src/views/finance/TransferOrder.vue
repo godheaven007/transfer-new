@@ -7,7 +7,7 @@
             <el-icon class="el-icon-question helpColor"></el-icon>
           </el-tooltip>
         </div>
-        <div class="money"><b>257288.88</b>元</div>
+        <div class="money"><b>{{ rechargeInfo.recharge_sum }}</b>元</div>
       </div>
       <div class="order-info-item">
         <div><span class="title">累计转账</span>
@@ -15,7 +15,7 @@
             <el-icon class="el-icon-question helpColor"></el-icon>
           </el-tooltip>
         </div>
-        <div class="money"><b>257208.88</b>元</div>
+        <div class="money"><b>{{ rechargeInfo.transfer_sum }}</b>元</div>
       </div>
       <div class="order-info-item">
         <div><span class="title">邀请收益</span>
@@ -23,11 +23,11 @@
             <el-icon class="el-icon-question helpColor"></el-icon>
           </el-tooltip>
         </div>
-        <div class="money"><b>0</b>元</div>
+        <div class="money"><b>{{ rechargeInfo.commission }}</b>元</div>
       </div>
       <div class="order-info-item deposit">
         <div><span class="title">账户余额</span></div>
-        <div class="money"><b>80</b>元</div>
+        <div class="money"><b>{{ rechargeInfo.balance }}</b>元</div>
         <div class="deposit-wrap">
             <el-tooltip class="item" effect="dark" content="最低提现金额1元，提现到账时间为T+1" placement="left">
               <el-button class="deposit-btn cash" size="small" @click="handleCash">提现</el-button>
@@ -110,16 +110,14 @@
               label="操作">
             <template slot-scope="scope">
               <!--等待审核-->
-              <el-button size="mini" type="primary" @click="doDeposit(scope.row.id, scope.row.recharge)">充值</el-button>
-              <el-button size="mini" type="danger" @click="cancelDeposit(scope.row.id)">取消</el-button>
-<!--              <div v-if="scope.row.status == 1">-->
-<!--                <el-button size="mini" type="primary" @click="doDeposit">充值</el-button>-->
-<!--                <el-button size="mini" type="danger" @click="cancelDeposit">取消</el-button>-->
-<!--              </div>-->
-<!--              <div v-else>-->
-<!--                <el-button size="mini" type="primary" disabled>充值</el-button>-->
-<!--                <el-button size="mini" type="danger" disabled>取消</el-button>-->
-<!--              </div>-->
+              <div v-if="(parseInt(scope.row.status) + 1) == 1">
+                <el-button size="mini" type="primary" @click="doDeposit(scope.row.id, scope.row.recharge)">充值</el-button>
+                <el-button size="mini" type="danger" @click="cancelDeposit(scope.row.id)">取消</el-button>
+              </div>
+              <div v-else>
+                <el-button size="mini" type="primary" disabled>充值</el-button>
+                <el-button size="mini" type="danger" disabled>取消</el-button>
+              </div>
             </template>
           </el-table-column>
         </el-table>
@@ -138,6 +136,49 @@
         </div>
       </div>
     </div>
+
+    <!--提现记录-->
+    <el-dialog
+        title="提现记录"
+        :visible.sync="cashDialogVisible"
+        :close-on-click-modal="false"
+        :close-on-press-escape="false"
+        width="650px">
+      <el-table
+          id="cash-table"
+          height="250"
+          :header-cell-style="{textAlign: 'center'}"
+          :cell-style="{ textAlign: 'center' }"
+          :data="cashData">
+        <el-table-column
+            prop="create_time"
+            label="日期">
+        </el-table-column>
+        <el-table-column
+            prop="amount"
+            label="金额">
+        </el-table-column>
+        <el-table-column
+            label="状态">
+          <template slot-scope="scope">
+            {{ scope.row.status_text }}
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="block">
+        <el-pagination
+            @size-change="handleSizeChange"
+            @current-change="handleCurrentChange"
+            :current-page="pagination2.currentPage"
+            :page-sizes="pagination2.pageSizes"
+            :page-size="pagination2.pageSize"
+            layout="total, sizes, prev, pager, next, jumper"
+            :total="pagination2.total"
+            style="margin-top: 15px; text-align: right;"
+        >
+        </el-pagination>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -149,7 +190,13 @@ export default {
   name: "TransferOrder",
   data() {
     return {
-      recordData: [],
+      rechargeInfo: {
+        recharge_sum: 0,              // 累计充值
+        transfer_sum: 0,              // 累计转账
+        commission: 0,                // 邀请收益
+        balance: 0,                   // 账户余额
+      },
+      recordData: [],               // 转账订单列表
       search: {
         type: 1,      // 转账类型1:支付宝,2:微信
         dateRange: [],
@@ -178,8 +225,17 @@ export default {
             label: '超时订单'
           }
         ]
-      },
+      },     // 搜索
       pagination: {
+        pageSizes: [10, 20, 50, 100],
+        pageSize: 10,
+        currentPage: 1,
+        total: 0
+      },            // 转账订单分页
+      // 提现记录
+      cashData: [],
+      cashDialogVisible: false,
+      pagination2: {
         pageSizes: [10, 20, 50, 100],
         pageSize: 10,
         currentPage: 1,
@@ -192,7 +248,15 @@ export default {
       alert('提现');
     },
     handleRecord() {
-      alert('提现记录');
+      this.cashDialogVisible = true;
+      api.getCashRecord({
+        current_page: this.pagination2.currentPage,
+        per_page: this.pagination2.pageSize
+      }).then(res => {
+        let result = res.data;
+        this.pagination2.total = result.total;
+        this.cashData = result.data;
+      })
     },
     handleSizeChange(val) {
       this.pagination.pageSize = val;
@@ -270,6 +334,7 @@ export default {
       });
     },
     setTagType(status) {
+      status = parseFloat(status) + 1;
       if(status == '1') {
         // 1:等待审核
         return 'warning';
@@ -279,10 +344,19 @@ export default {
       }
       // 3:订单取消,4:超时订单
       return 'danger';
+    },
+    getRechargeInfo() {
+      api.getRechargeInfo().then(res => {
+        this.rechargeInfo.recharge_sum = res.data.recharge_sum;
+        this.rechargeInfo.transfer_sum = res.data.transfer_sum;
+        this.rechargeInfo.commission = res.data.commission;
+        this.rechargeInfo.balance = res.data.balance;
+      });
     }
   },
   mounted() {
     this.queryList();
+    this.getRechargeInfo();
   }
 }
 </script>

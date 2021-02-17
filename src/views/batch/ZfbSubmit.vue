@@ -159,8 +159,7 @@ export default {
           payAmount: parseFloat(res.data.recharge),
           qrCodeUrl: res.data.qr_url
         });
-        // TODO...订单支付成功，清空
-        // Storage.clear('sureList');
+        Storage.clear('sureList');
       }).catch(error => {
         this.dialogVisible = false;
       })
@@ -174,7 +173,7 @@ export default {
     }
   },
   mounted() {
-    this.model.list = Storage.getItem('sureList');
+    this.model.list = Storage.getItem('sureList') || [];
   }
 }
 </script>

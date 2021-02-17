@@ -51,8 +51,21 @@ export default{
     },
     // 取消订单
     cancelOrder(param) {
-        return http.get(`/transfer/cancelOrder`, param)
+        return http.get(`/transfer/cancelOrder`, param);
     },
+    // 充值转账信息
+    getRechargeInfo() {
+        return http.get(`/transfer/rechargeInfo`);
+    },
+    // 用户提现
+    getCash(param) {
+        return http.get(`/transfer/withdrawal`, param);
+    },
+    // 用户提现记录
+    getCashRecord() {
+        return http.get(`/transfer/withdrawalRecord`);
+    },
+
     /**
      * 支持模块
      */
