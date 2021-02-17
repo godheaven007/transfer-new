@@ -161,8 +161,10 @@ export default {
         });
         // TODO...订单支付成功，清空
         // Storage.clear('sureList');
+      }).catch(error => {
+        this.dialogVisible = false;
       })
-    }, 600),
+    }, 300),
     doSubmit() {
       this.$refs.ruleForm.validate((valid) => {
         if (valid) {
