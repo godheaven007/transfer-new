@@ -44,7 +44,7 @@
           </el-card>
 
           <!--系统公告-->
-          <el-card class="mt20">
+          <el-card class="mt20_xxx">
             <div slot="header" class="clearfix">
               <span>系统公告</span>
             </div>
