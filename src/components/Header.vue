@@ -13,7 +13,7 @@
           active-text-color="#fff"
           router
           @select="handleSelect">
-        <el-menu-item index="index">个人中心</el-menu-item>
+        <el-menu-item index="/index">个人中心</el-menu-item>
         <el-submenu index="transfer">
           <template slot="title">批量转账</template>
           <el-menu-item index="/transferByWX">微信转账</el-menu-item>
@@ -54,7 +54,7 @@ export default {
   name: "Header",
   data() {
     return {
-      activeMenuIndex: 'index',
+      activeMenuIndex: '/index',
       level_text: '',
       user_login: ''
     };
@@ -69,11 +69,14 @@ export default {
     },
     setCurrentRoute() {
       let path = this.$route.path;
+      console.log('当前路由:', path);
       if(path.indexOf('transferBy') != -1) {
         this.activeMenuIndex = '/transferByZFB';
+      } else {
+        setTimeout(() => {
+          this.activeMenuIndex= path;
+        }, 200);
       }
-      console.log(this.$route.path, 999);
-      // this.activeMenuIndex= 'this.$route.path'; // 通过他就可以监听到当前路由状态并激活当前菜单
     },
     doLogout() {
       Storage.clear('sureList');
@@ -81,16 +84,15 @@ export default {
       this.$router.push({path: '/login'});
     }
   },
+
   watch: {
     $route() {
-      console.log('路由变化了', this.$route.path);
       this.setCurrentRoute();
     }
   },
-  created() {
-    this.setCurrentRoute();
-  },
   mounted() {
+    this.setCurrentRoute();
+
     this.axios.get('/home/personalInfo', {
       headers: {'Authorization':  window.localStorage.getItem('token')}
     }).then( res => {
@@ -136,8 +138,8 @@ $fontSize: 16px;
   }
   .el-menu-item.is-active,
   .el-submenu.is-active .el-submenu__title{
-    //background-color: #00786D!important;
-    //border-bottom-color: #5fb878!important;
+    background-color: #00786D!important;
+    border-bottom-color: #5fb878!important;
     border-bottom: 3px solid #5fb878!important;
   }
 }
