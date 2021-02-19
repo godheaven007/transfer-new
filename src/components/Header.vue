@@ -65,7 +65,7 @@ export default {
     },
     linkToVip() {
       this.activeMenuIndex = '';
-      this.$router.push({path: 'vip'});
+      this.$router.push({path: '/vip'});
     },
     setCurrentRoute() {
       let path = this.$route.path;
