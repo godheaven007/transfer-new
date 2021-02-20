@@ -107,6 +107,12 @@ const routes = [
         name: 'Vip',
         component: () => import('@/views/vip'),
         meta: {title: "会员购买"}
+      },
+      {
+        path: '/purchaseInfo',
+        name: 'PurchaseInfo',
+        component: () => import('@/views/vip/PurchaseInfo'),
+        meta: {title: '会员列表'}
       }
     ]
   },

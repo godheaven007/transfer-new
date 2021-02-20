@@ -7,12 +7,14 @@
         <p><i class="el-icon-success mr5" style="color: #666;"></i>使用量付通官方支付宝转账 <span class="strong">费率0.30%</span></p>
       </div>
       <div class="vip-price">￥1999.00 / 年</div>
-      <div class="establish">立即开通</div>
+      <div class="establish" @click="buy()">立即开通</div>
     </div>
   </div>
 </template>
 
 <script>
+import api from "@/util/api";
+
 export default {
   name: "VipIndex",
   data() {
@@ -22,7 +24,14 @@ export default {
   },
   methods: {
     buy() {
-      alert('购买插件')
+      this.$confirm('是否确认购买/续费【黄金会员】？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        closeOnClickModal: false
+      }).then(() => {
+        this.$router.push({path: '/purchaseInfo'})
+      }).catch(() => {
+      });
     }
   }
 }
