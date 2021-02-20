@@ -20,7 +20,7 @@ const routes = [
     redirect: '/index',
     children: [
       {
-        path: 'index',
+        path: '/index',
         name: 'index',
         component: () => import('@/views/index'),
         meta: {

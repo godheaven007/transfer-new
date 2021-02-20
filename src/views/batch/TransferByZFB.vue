@@ -8,7 +8,7 @@
           <p>使用自己的企业支付宝账户进行</p>
           <p>付款无需在系统中充值无任何手续费，单</p>
           <p>笔最低<em> 0.1 </em>元，每日限额<em> 100 </em>万元，没有笔数限制。</p>
-          <el-button size="medium" class="baseBtn">选择</el-button>
+          <el-button size="medium" class="baseBtn" @click="selectSelfMode">选择</el-button>
         </div>
       </li>
       <li class="box">
@@ -26,6 +26,9 @@
 
 <script>
 import CustomStep from "@/components/CustomStep";
+import Storage from '@/util/storage';
+import api from "@/util/api";
+
 export default {
   name: "TransferByZFB",
   components: {
@@ -37,6 +40,22 @@ export default {
     }
   },
   methods: {
+    selectSelfMode() {
+      let level = Storage.getItem('level');
+      if(level == '2') {
+        // 黄金会员
+      } else {
+        // 普通会员
+        this.$confirm('您的会员级别不能使用自有企业支付宝转账，是否升级？点击确认跳转到购买会员页面。', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          closeOnClickModal: false
+        }).then(() => {
+          this.$router.push({path: '/vip'});
+        }).catch(() => {
+        });
+      }
+    },
     selectZbfMode() {
       this.$router.push({path: 'transferByZFB/mode'});
     }

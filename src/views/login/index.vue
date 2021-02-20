@@ -72,13 +72,6 @@ export default {
       }
     }
   },
-
-  mounted() {
-    console.log('login mounted');
-  },
-  created() {
-    console.log('login Created');
-  },
   methods: {
     phoneValidate(rule, value, callback) {
       var reg = /^1\d{10}$/;

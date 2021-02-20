@@ -13,7 +13,7 @@
           active-text-color="#fff"
           router
           @select="handleSelect">
-        <el-menu-item index="index">个人中心</el-menu-item>
+        <el-menu-item index="/index">个人中心</el-menu-item>
         <el-submenu index="transfer">
           <template slot="title">批量转账</template>
           <el-menu-item index="/transferByWX">微信转账</el-menu-item>
@@ -54,7 +54,7 @@ export default {
   name: "Header",
   data() {
     return {
-      activeMenuIndex: 'index',
+      activeMenuIndex: '/index',
       level_text: '',
       user_login: ''
     };
@@ -65,14 +65,15 @@ export default {
     },
     linkToVip() {
       this.activeMenuIndex = '';
-      this.$router.push({path: 'vip'});
+      this.$router.push({path: '/vip'});
     },
     setCurrentRoute() {
       let path = this.$route.path;
       if(path.indexOf('transferBy') != -1) {
         this.activeMenuIndex = '/transferByZFB';
+      } else if(path.indexOf('vip') != -1) {
+        this.activeMenuIndex = '';
       }
-      console.log(this.$route.path, 999);
       // this.activeMenuIndex= 'this.$route.path'; // 通过他就可以监听到当前路由状态并激活当前菜单
     },
     doLogout() {
@@ -97,6 +98,7 @@ export default {
       if(res.data.code == 1) {
         this.level_text = res.data.data.level_text;
         this.user_login = res.data.data.user_login;
+        Storage.setItem('level', res.data.data.level);
       } else {
         Message.warning(res.data.msg);
       }
