@@ -14,9 +14,7 @@
         </div>
       </div>
       <div class="pay-foot">
-        <span>请在一分钟内完成付款,付款后请勿关闭此窗口否则将会造成充值失败！</span>
-        <br>
-        <span class="tips">（充值完成后，根据您的实际情况点击下面按钮！）</span>
+        <span>请在一分钟内完成付款,付款后请根据您的实际情况点击下面按钮！</span>
       </div>
       <div class="pay-operate">
         <el-button @click="payFail()">付款失败</el-button>

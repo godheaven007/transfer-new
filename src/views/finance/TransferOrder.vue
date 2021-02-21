@@ -248,7 +248,14 @@ export default {
       api.getSetting().then(res => {
         let withdrawal = res.data.withdrawal;
         if(!withdrawal.alipay_account) {
-
+          this.$confirm('您未设置提现账号，请设置后再进行该操作。', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            closeOnClickModal: false
+          }).then(() => {
+            this.$router.push({path: '/setting'});
+          }).catch(() => {
+          });
         } else {
           return withdrawal;
         }
@@ -260,6 +267,8 @@ export default {
         }).then(res => {
 
         })
+      }).catch(error => {
+        console.log(error);
       })
     },
     handleRecord() {
