@@ -103,6 +103,12 @@ export default {
       } else {
         Message.warning(res.data.msg);
       }
+    });
+
+    this.axios.get('/system/getSetting',{
+      headers: {'Authorization':  window.localStorage.getItem('token')}
+    }).then(res => {
+      Storage.setItem('charge', res.data.data.charge);
     })
   }
 }

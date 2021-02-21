@@ -39,7 +39,7 @@
               key="remark"
               label="备注内容">
             <template slot-scope="scope">
-              <el-form-item prop="remark">
+              <el-form-item :prop="'list.' + scope.$index + '.remark'" :rules="rules.remark">
                 <el-input v-model="scope.row.remark" placeholder="只能输入100个汉字" maxlength="100" size="medium"></el-input>
               </el-form-item>
             </template>
@@ -56,10 +56,10 @@
       <!--统计-->
       <ul class="statistics">
         <li>共计: {{ this.model.list.length }} 笔</li>
-        <li>手续费: {{ charges }}元</li>
+        <li>手续费: {{ getFee }}元</li>
         <li>转账金额: {{ amount }}元</li>
       </ul>
-      <div class="total"><b>总计</b>:  <span class="strong">{{ recharge }}元</span></div>
+      <div class="total"><b>总计</b>:  <span class="strong">{{ getTotalFee }}元</span></div>
       <div class="operate">
         <el-button class="resetBtn add" @click="doReset">重新填写</el-button>
         <el-button class="ml20 baseBtn submit" @click="doSubmit">提交转账</el-button>
@@ -100,10 +100,10 @@ export default {
 
         ]
       },
-      mode: 1,  // 转账账户类型,1:官方账户,2:企业账户
+      mode: 1,          // 转账账户类型,1:官方账户,2:企业账户
+      charge: null,
       amount: 0,        // 转账金额
-      charges: 0,       // 手续费
-      recharge: 0,      // 总计
+      serviceCharge: 0, // 转账费率（官方账户用）
       rules: {
         payee: [
           { required: true, message: '支付宝账号必填', trigger: 'blur' },
@@ -114,12 +114,21 @@ export default {
         amount: [
           { required: true, message: '转账金额必填', trigger: 'blur' },
           { validator: this.validateMoney, trigger: 'blur' }
+        ],
+        remark: [
+          { required: true, message: '备注内容必填', trigger: 'blur' },
         ]
       },
       dialogVisible: false
     }
   },
   methods: {
+    // 转账金额
+    getAmount() {
+      this.model.list.forEach((item) => {
+        this.amount = Util.accAdd(item.amount, this.amount);
+      })
+    },
     validateMoney(rule, value, callback) {
       var reg = /^([0-9](\.[0-9]{1,2}){0,1}|[1-9][0-9]{0,7}(\.[0-9]{1,2}){0,1})$/;
       if(!reg.test(value)) {
@@ -140,7 +149,6 @@ export default {
         return false;
       }
       this.model.list.splice(index,1);
-      this.getPayInfo();
     },
 
     // 确认提交
@@ -167,33 +175,37 @@ export default {
         }
       });
     },
-    getPayInfo() {
-      api.batchTransfer({
-        type: 1,
-        official: this.mode,
-        transfers: this.model.list
-      }).then(res => {
-        this.amount = res.data.amount;
-        this.charges = res.data.charges;
-        this.recharge = res.data.recharge;
-      }).catch(error => {
-
-      })
-    },
     doChangeAmount(val) {
       var reg = /^([0-9](\.[0-9]{1,2}){0,1}|[1-9][0-9]{0,7}(\.[0-9]{1,2}){0,1})$/;
       if(!reg.test(val) || parseFloat(val) < 1) {
         return false;
       }
-      this.getPayInfo();
+    }
+  },
+  computed: {
+    // 手续费
+    getFee() {
+      if(this.mode == 1) {
+        // 官方
+        return this.amount * this.serviceCharge;
+      }
+      return 0;
+    },
+    getTotalFee() {
+      if(this.mode == 1) {
+        // 官方
+        return Util.accAdd(this.amount * this.serviceCharge , this.amount);
+      }
+      return this.amount;
     }
   },
   mounted() {
     this.model.list = Storage.getItem('sureList') || [];
     this.mode = Storage.getItem('mode') || 1;
-    if(this.model.list.length) {
-      this.getPayInfo();
-    }
+    this.charge = Storage.getItem('charge') || {};
+    this.serviceCharge = parseFloat(this.charge.service_charge);
+
+    this.getAmount();
   }
 }
 </script>
