@@ -39,7 +39,7 @@
             key="remark"
             label="备注内容">
           <template slot-scope="scope">
-            <el-form-item prop="remark">
+            <el-form-item :prop="'list.' + scope.$index + '.remark'" :rules="rules.remark">
               <el-input v-model="scope.row.remark" placeholder="只能输入100个汉字" maxlength="100" size="medium"></el-input>
             </el-form-item>
           </template>
@@ -92,6 +92,9 @@ export default {
         amount: [
           { required: true, message: '转账金额必填', trigger: 'blur' },
           { validator: this.validateMoney, trigger: 'blur' }
+        ],
+        remark: [
+          { required: true, message: '备注内容必填', trigger: 'blur' },
         ]
       }
     }
