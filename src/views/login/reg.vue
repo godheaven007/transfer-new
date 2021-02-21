@@ -206,9 +206,6 @@ export default {
       this.$refs.regForm.validate((valid) => {
         if (valid) {
           this.doReg();
-        } else {
-          console.log('error submit!!');
-          return false;
         }
       });
     }

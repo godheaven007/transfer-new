@@ -9,28 +9,31 @@
           border
           :data="orderData">
         <el-table-column
-            prop="type"
+            prop="member_type"
             label="会员类型">
+          <template slot-scope="scope">
+            <span v-if="scope.row.member_type == 2">黄金会员</span>
+          </template>
         </el-table-column>
         <el-table-column
-            prop="price"
+            prop="member_price"
             label="会员价格">
         </el-table-column>
         <el-table-column
-            prop="amount"
+            prop="payment_price"
             label="应付金额">
         </el-table-column>
         <el-table-column
-            prop="limit"
+            prop="member_days"
             label="会员期限">
         </el-table-column>
         <el-table-column
-            prop="orderNo"
+            prop="order_number"
             label="订单编号">
         </el-table-column>
       </el-table>
 
-      <div class="total"><b>付款金额</b>:  <span class="strong">1999 元</span></div>
+      <div class="total"><b>付款金额</b>:  <span class="strong">{{ totalPrice }} 元</span></div>
       <div class="operate">
         <el-button class="ml20 baseBtn submit" @click="doSubmit">立即付款</el-button>
       </div>
@@ -47,20 +50,36 @@ export default {
   name: "PurchaseInfo",
   data() {
     return {
-      orderData: [{
-        type: '黄金会员',
-        price: '1999.00',
-        amount: '1999.00',
-        limit: 365,
-        orderNo: '20210219112110982901'
-      }]
+      totalPrice: 0,
+      payUrl: '',
+      orderData: []
     }
   },
   methods: {
     // 立即付款
     doSubmit: debounce(function() {
-      alert('立即付款');
+      var _this = this;
+      this.$pay({
+        payAmount: parseFloat(this.totalPrice),
+        qrCodeUrl: this.payUrl,
+        callback() {
+          _this.$router.push({path: '/index'});
+        }
+      });
     }, 300)
+  },
+  mounted() {
+    api.updateMember().then(res => {
+      this.orderData.push({
+        member_days: res.data.member_days,
+        member_price: res.data.member_price,
+        member_type: res.data.member_type,
+        order_number: res.data.order_number,
+        payment_price: res.data.payment_price
+      });
+      this.totalPrice = res.data.payment_price;
+      this.payUrl = res.data.qr_url;
+    })
   }
 }
 </script>

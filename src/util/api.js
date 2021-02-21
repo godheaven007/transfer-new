@@ -67,6 +67,25 @@ export default{
     },
 
     /**
+     * 系统设置模块
+     */
+    // 支付宝秘钥设置
+    setAlipayKey(param) {
+        return http.get(`/system/setAlipayKey`,param);
+    },
+    // 支付宝提现设置
+    setCashOut(param) {
+        return http.get(`/system/withdrawalSet`, param);
+    },
+    // 获取系统设置(支付宝秘钥,提现账号,转账提现手续费)
+    getSetting() {
+        return http.get(`/system/getSetting`);
+    },
+    // 升级/续费会员
+    updateMember() {
+        return http.get(`/system/memberOrder`);
+    },
+    /**
      * 支持模块
      */
     // 获取短信验证码

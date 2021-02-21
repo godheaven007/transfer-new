@@ -4,9 +4,9 @@
       <div class="vip-title">黄金会员</div>
       <div class="vip-info">
         <p><i class="el-icon-success mr5" style="color: #666;"></i>支持自有 <span class="strong">企业支付宝</span> 批量转账</p>
-        <p><i class="el-icon-success mr5" style="color: #666;"></i>使用量付通官方支付宝转账 <span class="strong">费率0.30%</span></p>
+        <p><i class="el-icon-success mr5" style="color: #666;"></i>使用量付通官方支付宝转账 <span class="strong">费率{{ service_charge }}%</span></p>
       </div>
-      <div class="vip-price">￥1999.00 / 年</div>
+      <div class="vip-price">￥{{ gold_member_price }} / 年</div>
       <div class="establish" @click="buy()">立即开通</div>
     </div>
   </div>
@@ -19,7 +19,8 @@ export default {
   name: "VipIndex",
   data() {
     return {
-
+      service_charge: 0,
+      gold_member_price: 0
     }
   },
   methods: {
@@ -33,6 +34,12 @@ export default {
       }).catch(() => {
       });
     }
+  },
+  mounted() {
+    api.getSetting().then(res => {
+      this.service_charge = parseFloat(res.data.charge.service_charge) * 100;
+      this.gold_member_price = res.data.charge.gold_member_price;
+    })
   }
 }
 </script>

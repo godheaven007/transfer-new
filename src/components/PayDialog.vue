@@ -13,7 +13,15 @@
           <img :src="qrCodeUrl">
         </div>
       </div>
-      <div class="pay-foot">请在一分钟内完成付款,付款后请勿关闭此窗口否则将会造成充值失败！</div>
+      <div class="pay-foot">
+        <span>请在一分钟内完成付款,付款后请勿关闭此窗口否则将会造成充值失败！</span>
+        <br>
+        <span class="tips">（充值完成后，根据您的实际情况点击下面按钮！）</span>
+      </div>
+      <div class="pay-operate">
+        <el-button @click="payFail()">付款失败</el-button>
+        <el-button type="primary" @click="paySuccess()">付款成功</el-button>
+      </div>
     </div>
   </div>
 </template>
@@ -41,21 +49,29 @@ export default {
   },
   data() {
     return {
-      timer: null
+      // 不需要轮询订单是否充值成功，后端不支持
+      // timer: null
     }
   },
   methods: {
     closePay() {
-      clearInterval(this.timer);
+      // clearInterval(this.timer);
       this.$emit('emptyInstance');
       this.$destroy();
       this.$el.remove();
+    },
+    payFail() {
+      this.closePay();
+    },
+    paySuccess() {
+      this.callback();
+      this.closePay();
     }
   },
   mounted() {
-    this.timer = setInterval(() => {
-      this.callback();
-    }, 1000);
+    // this.timer = setInterval(() => {
+    //   this.callback();
+    // }, 1000);
   }
 }
 </script>
@@ -76,7 +92,7 @@ export default {
     transform:translate(-50%,-50%);
     z-index:10;
     width:540px;
-    height:460px;
+    height:500px;
     background-color: #fff;
     opacity:1;
     .pay-head {
@@ -117,6 +133,14 @@ export default {
       text-align: center;
       color: #f00;
       margin-top: 20px;
+      .tips {
+        color: #666;
+      }
+    }
+    .pay-operate {
+      margin-top: 20px;
+      padding-right: 20px;
+      text-align: right;
     }
   }
 }

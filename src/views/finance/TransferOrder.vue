@@ -245,7 +245,22 @@ export default {
   },
   methods: {
     handleCash() {
-      alert('提现');
+      api.getSetting().then(res => {
+        let withdrawal = res.data.withdrawal;
+        if(!withdrawal.alipay_account) {
+
+        } else {
+          return withdrawal;
+        }
+      }).then(data => {
+        api.getCash({
+          type: 1,
+          payee: data.alipay_account,
+          real_name: data.real_name
+        }).then(res => {
+
+        })
+      })
     },
     handleRecord() {
       this.cashDialogVisible = true;
@@ -305,8 +320,8 @@ export default {
             qrCodeUrl: res.data.url,
             showClose: true,
             callback() {
-              console.log('轮询订单是否充值成功？');
-              // _this.queryList();
+              // console.log('轮询订单是否充值成功？');
+              _this.queryList();
             }
           });
         })
