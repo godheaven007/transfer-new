@@ -69,7 +69,7 @@ export default {
     },
     setCurrentRoute() {
       let path = this.$route.path;
-      console.log('当前路由:', path);
+      // console.log('当前路由:', path);
       if(path.indexOf('transferBy') != -1) {
         this.activeMenuIndex = '/transferByZFB';
       } else {

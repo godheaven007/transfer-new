@@ -44,6 +44,7 @@ export default {
       let level = Storage.getItem('level');
       if(level == '2') {
         // 黄金会员
+        Storage.setItem('mode', 2);     // 转账账户类型,1:官方账户,2:企业账户
       } else {
         // 普通会员
         this.$confirm('您的会员级别不能使用自有企业支付宝转账，是否升级？点击确认跳转到购买会员页面。', '提示', {
@@ -57,6 +58,7 @@ export default {
       }
     },
     selectZbfMode() {
+      Storage.setItem('mode', 1);
       this.$router.push({path: 'transferByZFB/mode'});
     }
   }

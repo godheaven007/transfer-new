@@ -103,7 +103,7 @@ export default {
         callback('仅支持最大8位整数允许2位小数');
       }
       if(value < 1) {
-        callback('公用支付宝转账每笔最低1元');
+        callback('支付宝转账每笔最低1元');
       }
       callback();
     },

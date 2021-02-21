@@ -37,11 +37,6 @@ export default {
   components: {
     CustomStep
   },
-  data() {
-    return {
-      uploadUrl: '/transfer/batchTransferByExcel'
-    }
-  },
   methods: {
     /**
      * 前端本地上传excel文件，需浏览器支持
@@ -94,31 +89,7 @@ export default {
         this.$message.error("请上传2M以下的excel文件");
         return false;
       }
-
-      // 通过 FormData 对象上传文件
-      let formData = new FormData();
-      formData.append("file", file);
-      formData.append("type", '1');             // 1:支付宝,2:微信
-      formData.append("official", '1');         // 1:官方账户,2:企业账户
-
-      this.axios.post(`/transfer/batchTransferByExcel`, formData, {
-          headers: { 'Content-Type': 'multipart/form-data', 'Authorization': window.localStorage.getItem('token') }}
-          ).then(res => {
-            let result = res.data;
-
-        if(result.code == 1) {
-              this.importFile(file);
-              // Storage.setItem('sureInfo', {
-              //   amount: result.data.amount,
-              //   batch_order_number: result.data.batch_order_number,
-              //   charges: result.data.charges,
-              //   qr_url: result.data.qr_url,
-              //   recharge: result.data.recharge
-              // });
-            }
-          }).catch(error => {
-            this.$message.error(error);
-          })
+      this.importFile(file);
     },
     downLoadTemplate() {
       api.downloadTransferExcel({

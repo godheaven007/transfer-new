@@ -31,7 +31,7 @@
               label="转账金额（元）">
             <template slot-scope="scope">
               <el-form-item :prop="'list.' + scope.$index + '.amount'" :rules="rules.amount">
-                <el-input v-model="scope.row.amount" placeholder="只能输入2位小数" size="medium"></el-input>
+                <el-input v-model="scope.row.amount" placeholder="只能输入2位小数" size="medium" @change="doChangeAmount"></el-input>
               </el-form-item>
             </template>
           </el-table-column>
@@ -56,10 +56,10 @@
       <!--统计-->
       <ul class="statistics">
         <li>共计: {{ this.model.list.length }} 笔</li>
-        <li>手续费: {{ getFee() }}元</li>
-        <li>转账金额: {{ getTransferAmount() }}元</li>
+        <li>手续费: {{ charges }}元</li>
+        <li>转账金额: {{ amount }}元</li>
       </ul>
-      <div class="total"><b>总计</b>:  <span class="strong">{{ getTotalAmount() }}元</span></div>
+      <div class="total"><b>总计</b>:  <span class="strong">{{ recharge }}元</span></div>
       <div class="operate">
         <el-button class="resetBtn add" @click="doReset">重新填写</el-button>
         <el-button class="ml20 baseBtn submit" @click="doSubmit">提交转账</el-button>
@@ -85,7 +85,8 @@ import CustomStep from "@/components/CustomStep";
 import Util from '@/util';
 import Storage from '@/util/storage';
 import api from "@/util/api";
-import debounce from 'lodash.debounce'
+import debounce from 'lodash.debounce';
+import {Message} from 'element-ui';
 
 export default {
   name: "ZfbSubmit",
@@ -99,7 +100,10 @@ export default {
 
         ]
       },
-      fee: 10, // 手续费
+      mode: 1,  // 转账账户类型,1:官方账户,2:企业账户
+      amount: 0,        // 转账金额
+      charges: 0,       // 手续费
+      recharge: 0,      // 总计
       rules: {
         payee: [
           { required: true, message: '支付宝账号必填', trigger: 'blur' },
@@ -122,7 +126,7 @@ export default {
         callback('仅支持最大8位整数允许2位小数');
       }
       if(value < 1) {
-        callback('公用支付宝转账每笔最低1元');
+        callback('支付宝转账每笔最低1元');
       }
       callback();
     },
@@ -131,27 +135,19 @@ export default {
       this.$router.push({path: '/transferByZFB'});
     },
     handleDelete(index, row) {
+      if(this.model.list.length == 1) {
+        Message.warning('至少需要一条转账记录！');
+        return false;
+      }
       this.model.list.splice(index,1);
-    },
-    getTransferAmount() {
-      let sum = 0;
-      this.model.list.forEach((item) => {
-        sum = Util.accAdd(sum, item.amount);
-      })
-      return sum;
-    },
-    getFee() {
-      return this.fee;
-    },
-    getTotalAmount() {
-      return this.getTransferAmount() + this.getFee();
+      this.getPayInfo();
     },
 
     // 确认提交
     doConfirmSubmit: debounce(function() {
       api.batchTransfer({
         type: 1,
-        official: 1,
+        official: this.mode,
         transfers: this.model.list
       }).then(res => {
         this.dialogVisible = false;
@@ -170,10 +166,34 @@ export default {
           this.dialogVisible = true;
         }
       });
+    },
+    getPayInfo() {
+      api.batchTransfer({
+        type: 1,
+        official: this.mode,
+        transfers: this.model.list
+      }).then(res => {
+        this.amount = res.data.amount;
+        this.charges = res.data.charges;
+        this.recharge = res.data.recharge;
+      }).catch(error => {
+
+      })
+    },
+    doChangeAmount(val) {
+      var reg = /^([0-9](\.[0-9]{1,2}){0,1}|[1-9][0-9]{0,7}(\.[0-9]{1,2}){0,1})$/;
+      if(!reg.test(val) || parseFloat(val) < 1) {
+        return false;
+      }
+      this.getPayInfo();
     }
   },
   mounted() {
     this.model.list = Storage.getItem('sureList') || [];
+    this.mode = Storage.getItem('mode') || 1;
+    if(this.model.list.length) {
+      this.getPayInfo();
+    }
   }
 }
 </script>
