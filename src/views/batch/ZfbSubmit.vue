@@ -56,10 +56,10 @@
       <!--统计-->
       <ul class="statistics">
         <li>共计: {{ this.model.list.length }} 笔</li>
-        <li>手续费: {{ getFee }}元</li>
+        <li>手续费: {{ getFee() }}元</li>
         <li>转账金额: {{ amount }}元</li>
       </ul>
-      <div class="total"><b>总计</b>:  <span class="strong">{{ getTotalFee }}元</span></div>
+      <div class="total"><b>总计</b>:  <span class="strong">{{ getTotalFee() }}元</span></div>
       <div class="operate">
         <el-button class="resetBtn add" @click="doReset">重新填写</el-button>
         <el-button class="ml20 baseBtn submit" @click="doSubmit">提交转账</el-button>
@@ -76,6 +76,24 @@
           <el-button @click="dialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="doConfirmSubmit()">确 定</el-button>
       </span>
+    </el-dialog>
+    <!-- 操作密码 -->
+    <el-dialog
+        title="提示"
+        width="500px"
+        :visible.sync="pwdForm.pwdDialogVisible"
+        :close-on-click-modal="false"
+        :close-on-press-escape="false"
+    >
+      <el-form :model="pwdForm">
+        <el-form-item label="操作密码" label-width="80px">
+          <el-input v-model="pwdForm.operation_pwd" type="password" show-password autocomplete="off" placeholder="请输入操作密码"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="pwdForm.pwdDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="doSelfCorpSubmit()">确 定</el-button>
+      </div>
     </el-dialog>
   </div>
 </template>
@@ -119,15 +137,42 @@ export default {
           { required: true, message: '备注内容必填', trigger: 'blur' },
         ]
       },
-      dialogVisible: false
+      dialogVisible: false,
+      pwdForm: {
+        operation_pwd: '',  // 操作密码（企业账户用，官方账户传空）
+        pwdDialogVisible: false
+      }
     }
   },
   methods: {
     // 转账金额
     getAmount() {
+      this.amount = 0;
       this.model.list.forEach((item) => {
-        this.amount = Util.accAdd(item.amount, this.amount);
+        let curAmount = parseFloat(item.amount) || 0;
+        this.amount = Util.accAdd(curAmount, this.amount);
       })
+      this.amount = Math.floor(this.amount * 100) / 100;
+    },
+    // 手续费
+    getFee() {
+      let fee = 0;    // 默认0（自有企业无手续费）
+      if(this.mode == 1) {
+        // 官方
+        fee = this.amount * this.serviceCharge;
+        if(fee < 0.01) {
+          fee = 0;
+        }
+      }
+      // return fee.toFixed(2);
+      return Math.floor(fee * 100) / 100;
+    },
+    getTotalFee() {
+      let totalFee = this.amount;
+      if(this.mode == 1) {
+        totalFee =  Util.accAdd(this.getFee() , this.amount);
+      }
+      return totalFee;
     },
     validateMoney(rule, value, callback) {
       var reg = /^([0-9](\.[0-9]{1,2}){0,1}|[1-9][0-9]{0,7}(\.[0-9]{1,2}){0,1})$/;
@@ -141,6 +186,7 @@ export default {
     },
     doReset() {
       Storage.clear('sureList');
+      Storage.clear('mode');
       this.$router.push({path: '/transferByZFB'});
     },
     handleDelete(index, row) {
@@ -149,24 +195,54 @@ export default {
         return false;
       }
       this.model.list.splice(index,1);
+      this.getAmount();
     },
-
-    // 确认提交
-    doConfirmSubmit: debounce(function() {
+    // 官方
+    doOfficialSubmit() {
+      var _this = this;
       api.batchTransfer({
         type: 1,
         official: this.mode,
-        transfers: this.model.list
+        transfers: this.model.list,
+        operation_pwd: ''
       }).then(res => {
         this.dialogVisible = false;
         this.$pay({
           payAmount: parseFloat(res.data.recharge),
-          qrCodeUrl: res.data.qr_url
+          qrCodeUrl: res.data.qr_url,
+          callback() {
+            _this.$router.push({path: '/finance/order'});
+          }
         });
         Storage.clear('sureList');
       }).catch(error => {
         this.dialogVisible = false;
       })
+    },
+    // 自有企业(不需要扫码支付)
+    doSelfCorpSubmit() {
+      this.dialogVisible = false;
+
+      api.batchTransfer({
+        type: 1,
+        official: this.mode,
+        transfers: this.model.list,
+        operation_pwd: this.pwdForm.operation_pwd
+      }).then(res => {
+        this.pwdForm.pwdDialogVisible = false;
+        Storage.clear('sureList');
+        this.$router.push({path: '/finance/order'})
+      }).catch(error => {
+        console.log(error);
+      })
+    },
+    // 确认提交
+    doConfirmSubmit: debounce(function() {
+      if(this.mode == '1') {
+        this.doOfficialSubmit();
+      } else {
+        this.pwdForm.pwdDialogVisible = true;
+      }
     }, 300),
     doSubmit() {
       this.$refs.ruleForm.validate((valid) => {
@@ -180,23 +256,7 @@ export default {
       if(!reg.test(val) || parseFloat(val) < 1) {
         return false;
       }
-    }
-  },
-  computed: {
-    // 手续费
-    getFee() {
-      if(this.mode == 1) {
-        // 官方
-        return this.amount * this.serviceCharge;
-      }
-      return 0;
-    },
-    getTotalFee() {
-      if(this.mode == 1) {
-        // 官方
-        return Util.accAdd(this.amount * this.serviceCharge , this.amount);
-      }
-      return this.amount;
+      this.getAmount();
     }
   },
   mounted() {

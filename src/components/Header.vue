@@ -80,6 +80,9 @@ export default {
     },
     doLogout() {
       Storage.clear('sureList');
+      Storage.clear('charge');
+      Storage.clear('level');
+      Storage.clear('mode');
       localStorage.removeItem('token');
       this.$router.push({path: '/login'});
     }
