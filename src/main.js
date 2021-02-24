@@ -17,7 +17,7 @@ if (mock) {
 }
 
 // axios全局配置
-axios.defaults.baseURL = '/api/v1'; // 代理跨域,使用vue.config.js
+axios.defaults.baseURL = 'http://101.33.122.195/api/v1'; // 代理跨域,使用vue.config.js
 axios.defaults.timeout = 8000;
 
 // 全局引入

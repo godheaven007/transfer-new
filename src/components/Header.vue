@@ -1,7 +1,7 @@
 <template>
   <div class="nav-wrap">
     <div class="nav-logo">
-      量付通批量转账系统
+      <a href="tencent://message/?uin=690399130">咨询我们</a>
     </div>
     <div class="nav-menu">
       <el-menu
@@ -120,6 +120,15 @@ $menuItemW: 150px;
 $menuItemH: 78px;
 $menuItemLH: 78px;
 $fontSize: 16px;
+//$darkBgColor: #00786D;
+//$lightBgColor:#5fb878;
+$darkBgColor: #84b19a;
+$lightBgColor:#c9c8aa;
+
+.el-menu--horizontal .el-menu .el-menu-item {
+  background-color: $darkBgColor!important;
+}
+
 .el-menu-custom /deep/ {
   .el-menu-item {
     width: $menuItemW;
@@ -127,6 +136,7 @@ $fontSize: 16px;
     line-height: $menuItemLH;
     font-size: $fontSize;
     text-align: center;
+    background-color: $darkBgColor!important;
   }
   .el-submenu {
     width: $menuItemW;
@@ -138,6 +148,7 @@ $fontSize: 16px;
       height: $menuItemH;
       line-height: $menuItemLH;
       font-size: $fontSize;
+      background-color: $darkBgColor!important;
       i {
         color: #fff;
       }
@@ -145,9 +156,9 @@ $fontSize: 16px;
   }
   .el-menu-item.is-active,
   .el-submenu.is-active .el-submenu__title{
-    background-color: #00786D!important;
-    border-bottom-color: #5fb878!important;
-    border-bottom: 3px solid #5fb878!important;
+    background-color: $darkBgColor!important;
+    border-bottom-color: $lightBgColor!important;
+    border-bottom: 3px solid $lightBgColor!important;
   }
 }
 
@@ -155,13 +166,16 @@ $fontSize: 16px;
   display: flex;
   height: 78px;
   line-height: 78px;
-  background-color: #009688;
+  background-color: $darkBgColor;
   .nav-logo {
+    width: 300px;
     text-align: center;
     font-size: 24px;
     color: #fff;
     margin-left: 20px;
     margin-right: auto;
+    background:url("/imgs/logo.png") no-repeat center center;
+    background-size: 160px 50px;
   }
   .nav-menu {
     flex-shrink: 0;
